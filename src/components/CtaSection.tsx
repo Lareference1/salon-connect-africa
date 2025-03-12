@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Link } from "react-router-dom";
 
 const CtaSection = () => {
   const { t } = useLanguage();
@@ -15,11 +16,18 @@ const CtaSection = () => {
           {t('ctaSubtitle')}
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Button className="bg-white text-salon-primary hover:bg-white/90 py-6 px-8 rounded-full text-lg">
-            {t('createFreeAccount')}
+          <Button 
+            className="bg-white text-salon-primary hover:bg-white/90 py-6 px-8 rounded-full text-lg"
+            asChild
+          >
+            <Link to="/auth?tab=signup">{t('createFreeAccount')}</Link>
           </Button>
-          <Button variant="outline" className="border-white text-white hover:bg-white/10 py-6 px-8 rounded-full text-lg">
-            {t('learnMore')}
+          <Button 
+            variant="outline" 
+            className="border-white text-white hover:bg-white/10 py-6 px-8 rounded-full text-lg"
+            asChild
+          >
+            <Link to="/about">{t('learnMore')}</Link>
           </Button>
         </div>
       </div>

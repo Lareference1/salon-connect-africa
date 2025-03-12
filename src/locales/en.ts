@@ -1,4 +1,3 @@
-
 export const en = {
   // Header
   home: "Home",
@@ -67,4 +66,18 @@ export const en = {
   hiring: "Hiring",
   noSalonFound: "No salon found",
   tryOtherCriteria: "Please try other search criteria."
-};
+
+  // Auth translations
+  login: "Login",
+  signUp: "Sign Up",
+  email: "Email",
+  password: "Password",
+  confirmPassword: "Confirm Password",
+  loggingIn: "Logging in...",
+  createAccount: "Create Account",
+  creatingAccount: "Creating account...",
+  enterYourCredentials: "Enter your credentials to login",
+  passwordsDoNotMatch: "Passwords do not match",
+  noAccount: "Don't have an account yet?",
+  alreadyHaveAccount: "Already have an account?"
+} as const;
