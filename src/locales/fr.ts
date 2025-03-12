@@ -1,3 +1,4 @@
+
 export const fr = {
   // Header
   home: "Accueil",
@@ -65,7 +66,7 @@ export const fr = {
   specialties: "Spécialités:",
   hiring: "Recrute",
   noSalonFound: "Aucun salon trouvé",
-  tryOtherCriteria: "Veuillez essayer d'autres critères de recherche."
+  tryOtherCriteria: "Veuillez essayer d'autres critères de recherche.",
 
   // Auth translations
   login: "Connexion",
@@ -79,5 +80,5 @@ export const fr = {
   enterYourCredentials: "Entrez vos identifiants pour vous connecter",
   passwordsDoNotMatch: "Les mots de passe ne correspondent pas",
   noAccount: "Pas encore de compte ?",
-  alreadyHaveAccount: "Vous avez déjà un compte ?",
+  alreadyHaveAccount: "Vous avez déjà un compte ?"
 } as const;

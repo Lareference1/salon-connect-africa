@@ -1,3 +1,4 @@
+
 export const en = {
   // Header
   home: "Home",
@@ -65,7 +66,7 @@ export const en = {
   specialties: "Specialties:",
   hiring: "Hiring",
   noSalonFound: "No salon found",
-  tryOtherCriteria: "Please try other search criteria."
+  tryOtherCriteria: "Please try other search criteria.",
 
   // Auth translations
   login: "Login",
