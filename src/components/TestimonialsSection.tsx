@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const testimonials = [
   {
@@ -41,6 +42,7 @@ const testimonials = [
 const TestimonialsSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const visibleTestimonials = testimonials.slice(activeIndex, activeIndex + 2);
+  const { t } = useLanguage();
   
   const nextSlide = () => {
     setActiveIndex((prev) => (prev + 1) % (testimonials.length - 1));
@@ -51,19 +53,19 @@ const TestimonialsSection = () => {
   };
 
   return (
-    <section className="py-16 bg-salon-accent1/5">
+    <section className="py-16 bg-salon-accent1/5 dark:bg-gray-800">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-display mb-4">Ce que disent nos utilisateurs</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Découvrez les expériences de salons et de tresseuses qui ont utilisé notre plateforme.
+          <h2 className="text-3xl md:text-4xl font-display mb-4 dark:text-white">{t('testimonials')}</h2>
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            {t('testimonialsSubtitle')}
           </p>
         </div>
         
         <div className="relative">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             {visibleTestimonials.map((testimonial) => (
-              <Card key={testimonial.id} className="border-none shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <Card key={testimonial.id} className="border-none shadow-lg hover:shadow-xl transition-shadow duration-300 dark:bg-gray-700">
                 <CardContent className="p-8">
                   <div className="flex items-center mb-4">
                     <img 
@@ -72,12 +74,12 @@ const TestimonialsSection = () => {
                       className="w-12 h-12 rounded-full mr-4 object-cover"
                     />
                     <div>
-                      <h4 className="font-semibold text-lg">{testimonial.name}</h4>
-                      <p className="text-sm text-gray-500">{testimonial.role}</p>
+                      <h4 className="font-semibold text-lg dark:text-white">{testimonial.name}</h4>
+                      <p className="text-sm text-gray-500 dark:text-gray-300">{testimonial.role}</p>
                     </div>
                   </div>
                   
-                  <p className="text-gray-700 mb-4">"{testimonial.content}"</p>
+                  <p className="text-gray-700 dark:text-gray-200 mb-4">"{testimonial.content}"</p>
                   
                   <div className="flex">
                     {[...Array(5)].map((_, i) => (
@@ -86,7 +88,7 @@ const TestimonialsSection = () => {
                         className={`h-5 w-5 ${
                           i < testimonial.rating 
                             ? "text-salon-accent2 fill-salon-accent2" 
-                            : "text-gray-300"
+                            : "text-gray-300 dark:text-gray-500"
                         }`}
                       />
                     ))}
@@ -99,14 +101,14 @@ const TestimonialsSection = () => {
           <div className="flex justify-center space-x-4">
             <button 
               onClick={prevSlide}
-              className="p-2 rounded-full bg-salon-primary/10 text-salon-primary hover:bg-salon-primary hover:text-white transition-colors"
+              className="p-2 rounded-full bg-salon-primary/10 text-salon-primary hover:bg-salon-primary hover:text-white transition-colors dark:bg-salon-primary/20"
               aria-label="Previous testimonial"
             >
               <ChevronLeft className="h-6 w-6" />
             </button>
             <button 
               onClick={nextSlide}
-              className="p-2 rounded-full bg-salon-primary/10 text-salon-primary hover:bg-salon-primary hover:text-white transition-colors"
+              className="p-2 rounded-full bg-salon-primary/10 text-salon-primary hover:bg-salon-primary hover:text-white transition-colors dark:bg-salon-primary/20"
               aria-label="Next testimonial"
             >
               <ChevronRight className="h-6 w-6" />

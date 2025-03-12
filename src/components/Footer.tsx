@@ -1,8 +1,12 @@
 
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Twitter } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Footer = () => {
+  const { t } = useLanguage();
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className="bg-salon-dark text-white pt-12 pb-6">
       <div className="container mx-auto px-4">
@@ -26,17 +30,17 @@ const Footer = () => {
           </div>
           
           <div>
-            <h4 className="text-lg font-medium mb-4">Navigation</h4>
+            <h4 className="text-lg font-medium mb-4">{t('navigation')}</h4>
             <ul className="space-y-2 text-sm text-gray-300">
-              <li><Link to="/" className="hover:text-salon-primary transition-colors">Accueil</Link></li>
-              <li><Link to="/salons" className="hover:text-salon-primary transition-colors">Salons</Link></li>
-              <li><Link to="/braiders" className="hover:text-salon-primary transition-colors">Tresseuses</Link></li>
-              <li><Link to="/about" className="hover:text-salon-primary transition-colors">À propos</Link></li>
+              <li><Link to="/" className="hover:text-salon-primary transition-colors">{t('home')}</Link></li>
+              <li><Link to="/salons" className="hover:text-salon-primary transition-colors">{t('salons')}</Link></li>
+              <li><Link to="/braiders" className="hover:text-salon-primary transition-colors">{t('braiders')}</Link></li>
+              <li><Link to="/about" className="hover:text-salon-primary transition-colors">{t('about')}</Link></li>
             </ul>
           </div>
           
           <div>
-            <h4 className="text-lg font-medium mb-4">Services</h4>
+            <h4 className="text-lg font-medium mb-4">{t('services')}</h4>
             <ul className="space-y-2 text-sm text-gray-300">
               <li><a href="#" className="hover:text-salon-primary transition-colors">Recherche de salon</a></li>
               <li><a href="#" className="hover:text-salon-primary transition-colors">Recrutement de tresseuses</a></li>
@@ -46,7 +50,7 @@ const Footer = () => {
           </div>
           
           <div>
-            <h4 className="text-lg font-medium mb-4">Contact</h4>
+            <h4 className="text-lg font-medium mb-4">{t('contact')}</h4>
             <ul className="space-y-2 text-sm text-gray-300">
               <li>info@salonconnect.africa</li>
               <li>+1 (234) 567-8901</li>
@@ -56,7 +60,7 @@ const Footer = () => {
         </div>
         
         <div className="border-t border-gray-800 mt-8 pt-6 text-center text-sm text-gray-400">
-          <p>&copy; {new Date().getFullYear()} SalonConnect Africa. Tous droits réservés.</p>
+          <p>&copy; {currentYear} SalonConnect Africa. {t('copyright')}</p>
         </div>
       </div>
     </footer>

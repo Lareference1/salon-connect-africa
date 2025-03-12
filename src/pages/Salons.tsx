@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MapPin, Star, Phone, Calendar } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 // Sample salon data
 const salonsData = [
@@ -73,6 +74,7 @@ const salonsData = [
 ];
 
 const Salons = () => {
+  const { t } = useLanguage();
   const [location, setLocation] = useState("");
   const [specialty, setSpecialty] = useState("");
   const [hiringOnly, setHiringOnly] = useState(false);
@@ -103,40 +105,41 @@ const Salons = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-grow bg-gray-50">
+      <main className="flex-grow bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto px-4 py-12">
           <div className="max-w-4xl mx-auto text-center mb-12">
-            <h1 className="text-4xl font-display mb-4">Découvrez les salons africains</h1>
-            <p className="text-lg text-gray-600">
-              Trouvez les meilleurs salons de coiffure africains aux États-Unis.
+            <h1 className="text-4xl font-display mb-4 dark:text-white">{t('discoverSalons')}</h1>
+            <p className="text-lg text-gray-600 dark:text-gray-300">
+              {t('findBestSalons')}
             </p>
           </div>
           
           {/* Search and Filter */}
-          <div className="bg-white p-6 rounded-lg shadow-md mb-12">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-12">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div>
-                <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
-                  Lieu
+                <label htmlFor="location" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  {t('location')}
                 </label>
                 <Input 
                   id="location"
-                  placeholder="Ville, État..." 
+                  placeholder={t('location')} 
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
+                  className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
               </div>
               
               <div>
-                <label htmlFor="specialty" className="block text-sm font-medium text-gray-700 mb-1">
-                  Spécialité
+                <label htmlFor="specialty" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  {t('specialty')}
                 </label>
                 <Select value={specialty} onValueChange={setSpecialty}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sélectionner une spécialité" />
+                  <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <SelectValue placeholder={t('selectSpecialty')} />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="">Toutes les spécialités</SelectItem>
+                  <SelectContent className="dark:bg-gray-800">
+                    <SelectItem value="">{t('allSpecialties')}</SelectItem>
                     <SelectItem value="Box Braids">Box Braids</SelectItem>
                     <SelectItem value="Knotless">Knotless Braids</SelectItem>
                     <SelectItem value="Locs">Locs</SelectItem>
@@ -152,7 +155,7 @@ const Salons = () => {
                   className="w-full bg-salon-primary hover:bg-salon-primary/90"
                   onClick={handleSearch}
                 >
-                  Rechercher
+                  {t('search')}
                 </Button>
               </div>
             </div>
@@ -161,12 +164,12 @@ const Salons = () => {
               <input 
                 type="checkbox" 
                 id="hiringOnly" 
-                className="mr-2 h-4 w-4 rounded border-gray-300 text-salon-primary focus:ring-salon-primary/25"
+                className="mr-2 h-4 w-4 rounded border-gray-300 text-salon-primary focus:ring-salon-primary/25 dark:border-gray-600 dark:bg-gray-700"
                 checked={hiringOnly}
                 onChange={(e) => setHiringOnly(e.target.checked)}
               />
-              <label htmlFor="hiringOnly" className="text-sm text-gray-700">
-                Afficher uniquement les salons qui recrutent
+              <label htmlFor="hiringOnly" className="text-sm text-gray-700 dark:text-gray-300">
+                {t('showOnlyHiring')}
               </label>
             </div>
           </div>
@@ -174,7 +177,7 @@ const Salons = () => {
           {/* Results */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredSalons.map((salon) => (
-              <Card key={salon.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+              <Card key={salon.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300 dark:bg-gray-800 dark:border-gray-700">
                 <div className="relative h-48">
                   <img 
                     src={salon.image} 
@@ -183,30 +186,30 @@ const Salons = () => {
                   />
                   {salon.hiringStatus && (
                     <div className="absolute top-4 right-4 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded">
-                      Recrute
+                      {t('hiring')}
                     </div>
                   )}
                 </div>
                 <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{salon.name}</h3>
+                  <h3 className="text-xl font-semibold mb-2 dark:text-white">{salon.name}</h3>
                   
-                  <div className="flex items-center text-gray-500 mb-2">
+                  <div className="flex items-center text-gray-500 dark:text-gray-400 mb-2">
                     <MapPin className="h-4 w-4 mr-1" />
                     <span className="text-sm">{salon.location}</span>
                   </div>
                   
-                  <div className="flex items-center text-gray-500 mb-3">
+                  <div className="flex items-center text-gray-500 dark:text-gray-400 mb-3">
                     <Star className="h-4 w-4 text-salon-accent2 fill-salon-accent2 mr-1" />
                     <span className="text-sm">{salon.rating} ({salon.reviews} avis)</span>
                   </div>
                   
                   <div className="mb-4">
-                    <h4 className="text-sm font-medium mb-1">Spécialités:</h4>
+                    <h4 className="text-sm font-medium mb-1 dark:text-gray-300">{t('specialties')}</h4>
                     <div className="flex flex-wrap gap-1">
                       {salon.specialties.map((specialty, index) => (
                         <span 
                           key={index}
-                          className="inline-block bg-salon-primary/10 text-salon-primary text-xs px-2 py-1 rounded"
+                          className="inline-block bg-salon-primary/10 text-salon-primary text-xs px-2 py-1 rounded dark:bg-salon-primary/20"
                         >
                           {specialty}
                         </span>
@@ -226,7 +229,7 @@ const Salons = () => {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="flex-1 border-salon-accent1 text-salon-accent1 hover:bg-salon-accent1/10"
+                      className="flex-1 border-salon-accent1 text-salon-accent1 hover:bg-salon-accent1/10 dark:text-white dark:border-white"
                     >
                       <Calendar className="h-4 w-4 mr-1" />
                       Rendez-vous
@@ -239,8 +242,8 @@ const Salons = () => {
           
           {filteredSalons.length === 0 && (
             <div className="text-center py-12">
-              <h3 className="text-xl font-medium mb-2">Aucun salon trouvé</h3>
-              <p className="text-gray-600">Veuillez essayer d'autres critères de recherche.</p>
+              <h3 className="text-xl font-medium mb-2 dark:text-white">{t('noSalonFound')}</h3>
+              <p className="text-gray-600 dark:text-gray-400">{t('tryOtherCriteria')}</p>
             </div>
           )}
         </div>
