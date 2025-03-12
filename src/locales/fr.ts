@@ -5,8 +5,6 @@ export const fr = {
   salons: "Salons",
   braiders: "Tresseuses",
   about: "À propos",
-  
-  // Auth
   signUp: "S'inscrire",
   login: "Connexion",
   
@@ -71,6 +69,8 @@ export const fr = {
   tryOtherCriteria: "Veuillez essayer d'autres critères de recherche.",
 
   // Auth translations
+  login: "Connexion",
+  signUp: "S'inscrire",
   email: "Email",
   password: "Mot de passe",
   confirmPassword: "Confirmer le mot de passe",
