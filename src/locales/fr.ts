@@ -5,8 +5,6 @@ export const fr = {
   salons: "Salons",
   braiders: "Tresseuses",
   about: "À propos",
-  signUp: "S'inscrire",
-  login: "Connexion",
   
   // Hero Section
   heroTitle: "Connecter les salons africains aux meilleures tresseuses",

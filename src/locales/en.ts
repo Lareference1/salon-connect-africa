@@ -5,8 +5,6 @@ export const en = {
   salons: "Salons",
   braiders: "Braiders",
   about: "About",
-  signUp: "Sign Up",
-  login: "Login",
   
   // Hero Section
   heroTitle: "Connecting African salons with the best braiders",
