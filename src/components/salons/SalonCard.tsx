@@ -42,8 +42,8 @@ const SalonCard = ({ salon }: { salon: SalonProps }) => {
         </div>
         
         <div className="flex items-center text-gray-500 dark:text-gray-400 mb-3">
-          <Star className="h-4 w-4 text-salon-accent2 fill-salon-accent2 mr-1" />
-          <span className="text-sm">{salon.rating} ({salon.reviews} avis)</span>
+          <Star className="h-4 w-4 text-yellow-500 fill-yellow-500 mr-1" />
+          <span className="text-sm">{salon.rating} ({salon.reviews} reviews)</span>
         </div>
         
         <div className="mb-4">
@@ -52,7 +52,7 @@ const SalonCard = ({ salon }: { salon: SalonProps }) => {
             {salon.specialties.map((specialty, index) => (
               <span 
                 key={index}
-                className="inline-block bg-salon-primary/10 text-salon-primary text-xs px-2 py-1 rounded dark:bg-salon-primary/20"
+                className="inline-block bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded dark:bg-orange-900/20 dark:text-orange-300"
               >
                 {specialty}
               </span>
@@ -64,7 +64,7 @@ const SalonCard = ({ salon }: { salon: SalonProps }) => {
           <Button 
             variant="default" 
             size="sm" 
-            className="flex-1 bg-salon-primary hover:bg-salon-primary/90"
+            className="flex-1"
           >
             <Phone className="h-4 w-4 mr-1" />
             Contact
@@ -72,10 +72,10 @@ const SalonCard = ({ salon }: { salon: SalonProps }) => {
           <Button 
             variant="outline" 
             size="sm" 
-            className="flex-1 border-salon-accent1 text-salon-accent1 hover:bg-salon-accent1/10 dark:text-white dark:border-white"
+            className="flex-1"
           >
             <Calendar className="h-4 w-4 mr-1" />
-            Rendez-vous
+            Appointment
           </Button>
         </div>
       </CardContent>
