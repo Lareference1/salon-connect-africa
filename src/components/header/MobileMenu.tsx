@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Search, User, Loader2, LogOut } from "lucide-react";
+import { ChevronDown, User, Loader2, LogOut } from "lucide-react";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/components/auth/AuthContext';
 import { cn } from '@/lib/utils';
@@ -56,40 +56,44 @@ const MobileMenu = ({ isOpen, onClose, isLoading, onSignUp }: MobileMenuProps) =
           {t('home')}
         </Link>
         
-        <div className="py-1 px-3">
-          <div className="flex justify-between items-center cursor-pointer py-2" 
-               onClick={() => {
-                 const subMenu = document.getElementById('salons-submenu');
-                 if (subMenu) subMenu.classList.toggle('hidden');
-               }}>
-            <span className="text-salon-dark dark:text-white">{t('salons')}</span>
-            <ChevronDown className="h-4 w-4" />
-          </div>
-          <div id="salons-submenu" className="hidden pl-4 space-y-2 py-2">
+        {user && (
+          <>
+            <div className="py-1 px-3">
+              <div className="flex justify-between items-center cursor-pointer py-2" 
+                  onClick={() => {
+                    const subMenu = document.getElementById('salons-submenu');
+                    if (subMenu) subMenu.classList.toggle('hidden');
+                  }}>
+                <span className="text-salon-dark dark:text-white">{t('salons')}</span>
+                <ChevronDown className="h-4 w-4" />
+              </div>
+              <div id="salons-submenu" className="hidden pl-4 space-y-2 py-2">
+                <button 
+                  className="block py-2 text-salon-dark dark:text-white hover:text-salon-primary transition-colors"
+                  onClick={() => handleProtectedNavigation('/salons')}
+                >
+                  {t('allSalons')}
+                </button>
+                <button 
+                  className="block py-2 text-salon-dark dark:text-white hover:text-salon-primary transition-colors"
+                  onClick={() => handleProtectedNavigation('/salons?featured=true')}
+                >
+                  {t('featuredSalons')}
+                </button>
+              </div>
+            </div>
+            
             <button 
-              className="block py-2 text-salon-dark dark:text-white hover:text-salon-primary transition-colors"
-              onClick={() => handleProtectedNavigation('/salons')}
+              className={cn(
+                "text-left text-salon-dark dark:text-white hover:text-salon-primary transition-colors py-3 px-3 rounded-md",
+                location.pathname === "/braiders" && "bg-muted dark:bg-muted text-salon-primary"
+              )}
+              onClick={() => handleProtectedNavigation('/braiders')}
             >
-              {t('allSalons')}
+              {t('braiders')}
             </button>
-            <button 
-              className="block py-2 text-salon-dark dark:text-white hover:text-salon-primary transition-colors"
-              onClick={() => handleProtectedNavigation('/salons?featured=true')}
-            >
-              {t('featuredSalons')}
-            </button>
-          </div>
-        </div>
-        
-        <button 
-          className={cn(
-            "text-left text-salon-dark dark:text-white hover:text-salon-primary transition-colors py-3 px-3 rounded-md",
-            location.pathname === "/braiders" && "bg-muted dark:bg-muted text-salon-primary"
-          )}
-          onClick={() => handleProtectedNavigation('/braiders')}
-        >
-          {t('braiders')}
-        </button>
+          </>
+        )}
         
         <Link 
           to="/about" 
