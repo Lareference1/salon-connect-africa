@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/auth/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
 import { Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Form,
@@ -28,6 +29,7 @@ const profileSchema = z.object({
   email: z.string().email('Invalid email address'),
   phone: z.string().optional(),
   preferredContact: z.enum(['email', 'phone']),
+  userType: z.enum(['salon', 'braider', 'customer']).default('customer'),
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
@@ -36,6 +38,7 @@ const UserProfileForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
@@ -45,6 +48,7 @@ const UserProfileForm = () => {
       email: user?.email || '',
       phone: '',
       preferredContact: 'email',
+      userType: 'customer',
     },
   });
 
@@ -70,6 +74,7 @@ const UserProfileForm = () => {
         //   form.setValue('bio', data.bio);
         //   form.setValue('phone', data.phone);
         //   form.setValue('preferredContact', data.preferred_contact);
+        //   form.setValue('userType', data.user_type);
         // }
       } catch (error) {
         console.error('Error fetching profile:', error);
@@ -100,6 +105,7 @@ const UserProfileForm = () => {
       //     bio: data.bio,
       //     phone: data.phone,
       //     preferred_contact: data.preferredContact,
+      //     user_type: data.userType,
       //     updated_at: new Date(),
       //   });
       
@@ -109,6 +115,15 @@ const UserProfileForm = () => {
         title: 'Profile Updated',
         description: 'Your profile information has been saved.',
       });
+      
+      // Redirect based on user type
+      if (data.userType === 'salon') {
+        navigate('/salons');
+      } else if (data.userType === 'braider') {
+        navigate('/braiders');
+      } else {
+        navigate('/');
+      }
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
@@ -223,6 +238,49 @@ const UserProfileForm = () => {
                       </FormControl>
                       <FormLabel className="font-normal">
                         Phone
+                      </FormLabel>
+                    </FormItem>
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="userType"
+            render={({ field }) => (
+              <FormItem className="space-y-3">
+                <FormLabel>I am a:</FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex flex-col space-y-1"
+                  >
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="salon" />
+                      </FormControl>
+                      <FormLabel className="font-normal">
+                        Salon Owner
+                      </FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="braider" />
+                      </FormControl>
+                      <FormLabel className="font-normal">
+                        Braider
+                      </FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="customer" />
+                      </FormControl>
+                      <FormLabel className="font-normal">
+                        Customer
                       </FormLabel>
                     </FormItem>
                   </RadioGroup>

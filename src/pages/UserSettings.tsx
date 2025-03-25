@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import UserProfileForm from '@/components/UserProfileForm';
@@ -14,11 +14,11 @@ const UserSettings = () => {
   const navigate = useNavigate();
   
   // If not authenticated, redirect to auth page
-  useState(() => {
+  useEffect(() => {
     if (!user) {
       navigate('/auth');
     }
-  });
+  }, [user, navigate]);
 
   return (
     <div className="min-h-screen flex flex-col">
