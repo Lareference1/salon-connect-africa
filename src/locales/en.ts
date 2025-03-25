@@ -9,6 +9,7 @@ export const en = {
   about: "About",
   signUp: "Sign Up",
   login: "Login",
+  logout: "Logout",
   
   // Hero Section
   heroTitle: "Connecting African salons with the best braiders",
@@ -107,5 +108,32 @@ export const en = {
   // 404 page
   pageNotFound: "Oops! Page not found",
   pageNotFoundDesc: "The page you are looking for does not exist or has been moved.",
-  backToHome: "Back to home"
+  backToHome: "Back to home",
+  
+  // Auth
+  welcomeBack: "Welcome to SalonConnect Africa",
+  authDescription: "Sign in to your account or create a new one",
+  password: "Password",
+  verificationCode: "Verification Code",
+  invalidEmail: "Invalid email address",
+  invalidPhone: "Invalid phone number",
+  passwordMinLength: "Password must be at least 6 characters",
+  passwordRequired: "Password is required",
+  otpRequired: "Verification code is required",
+  verify: "Verify",
+  verifying: "Verifying...",
+  resendCode: "Resend code",
+  resendCodeIn: "Resend code in",
+  loading: "Loading...",
+  verificationRequired: "Verification Required",
+  verificationEmailSent: "We've sent a verification code to your email",
+  verificationSmsSent: "We've sent a verification code to your phone",
+  authSuccess: "Success!",
+  authSuccessDesc: "You've successfully authenticated",
+  authError: "Error",
+  signUpError: "Error during sign up",
+  signInError: "Error during sign in",
+  verificationError: "Error during verification",
+  resendCodeError: "Error resending code",
+  privacyNotice: "By signing up, you agree to our Terms of Service and Privacy Policy"
 };

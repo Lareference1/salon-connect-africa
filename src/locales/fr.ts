@@ -9,6 +9,7 @@ export const fr = {
   about: "À propos",
   signUp: "S'inscrire",
   login: "Connexion",
+  logout: "Déconnexion",
   
   // Hero Section
   heroTitle: "Connecter les salons africains aux meilleures tresseuses",
@@ -107,5 +108,32 @@ export const fr = {
   // 404 page
   pageNotFound: "Oups! Page introuvable",
   pageNotFoundDesc: "La page que vous recherchez n'existe pas ou a été déplacée.",
-  backToHome: "Retour à l'accueil"
+  backToHome: "Retour à l'accueil",
+  
+  // Auth
+  welcomeBack: "Bienvenue à SalonConnect Africa",
+  authDescription: "Connectez-vous à votre compte ou créez-en un nouveau",
+  password: "Mot de passe",
+  verificationCode: "Code de Vérification",
+  invalidEmail: "Adresse email invalide",
+  invalidPhone: "Numéro de téléphone invalide",
+  passwordMinLength: "Le mot de passe doit comporter au moins 6 caractères",
+  passwordRequired: "Le mot de passe est requis",
+  otpRequired: "Le code de vérification est requis",
+  verify: "Vérifier",
+  verifying: "Vérification en cours...",
+  resendCode: "Renvoyer le code",
+  resendCodeIn: "Renvoyer le code dans",
+  loading: "Chargement...",
+  verificationRequired: "Vérification Requise",
+  verificationEmailSent: "Nous avons envoyé un code de vérification à votre email",
+  verificationSmsSent: "Nous avons envoyé un code de vérification à votre téléphone",
+  authSuccess: "Succès !",
+  authSuccessDesc: "Vous vous êtes authentifié avec succès",
+  authError: "Erreur",
+  signUpError: "Erreur lors de l'inscription",
+  signInError: "Erreur lors de la connexion",
+  verificationError: "Erreur lors de la vérification",
+  resendCodeError: "Erreur lors du renvoi du code",
+  privacyNotice: "En vous inscrivant, vous acceptez nos Conditions d'utilisation et notre Politique de confidentialité"
 };

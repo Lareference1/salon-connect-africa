@@ -1,9 +1,10 @@
 
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Search, User, Loader2 } from "lucide-react";
+import { ChevronDown, Search, User, Loader2, LogOut } from "lucide-react";
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/components/auth/AuthContext';
 import { cn } from '@/lib/utils';
 
 interface MobileMenuProps {
@@ -16,8 +17,19 @@ interface MobileMenuProps {
 const MobileMenu = ({ isOpen, onClose, isLoading, onSignUp }: MobileMenuProps) => {
   const { t } = useLanguage();
   const location = useLocation();
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   if (!isOpen) return null;
+
+  const handleAuthAction = () => {
+    if (user) {
+      signOut();
+    } else {
+      navigate('/auth');
+      onClose();
+    }
+  };
 
   return (
     <div className="md:hidden absolute top-16 left-0 right-0 bg-white/95 dark:bg-salon-dark/95 backdrop-blur-sm shadow-md py-4 px-4 z-50 animate-fade-in">
@@ -85,7 +97,14 @@ const MobileMenu = ({ isOpen, onClose, isLoading, onSignUp }: MobileMenuProps) =
           <Button variant="ghost" size="icon" className="rounded-full p-2">
             <Search className="h-5 w-5" />
           </Button>
-          <Button variant="ghost" size="icon" className="rounded-full p-2">
+          <Button 
+            as={Link}
+            to={user ? '/profile' : '/auth'}
+            variant="ghost" 
+            size="icon" 
+            className="rounded-full p-2"
+            onClick={onClose}
+          >
             <User className="h-5 w-5" />
           </Button>
         </div>
@@ -96,21 +115,39 @@ const MobileMenu = ({ isOpen, onClose, isLoading, onSignUp }: MobileMenuProps) =
               "w-full bg-gradient-to-r from-salon-primary to-salon-primary/90 hover:from-salon-primary/80 hover:to-salon-primary hover:scale-105 shadow-md hover:shadow-lg active:scale-95 transition-all duration-300 border-0 rounded-full text-sm",
               isLoading && "opacity-80 cursor-not-allowed"
             )}
-            onClick={onSignUp}
+            onClick={handleAuthAction}
             disabled={isLoading}
           >
             {isLoading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                {t('signUp')}...
+                {user ? t('logout') : t('signUp')}...
               </>
             ) : (
-              t('signUp')
+              <>
+                {user ? (
+                  <>
+                    <LogOut className="h-4 w-4 mr-2" />
+                    {t('logout')}
+                  </>
+                ) : (
+                  t('signUp')
+                )}
+              </>
             )}
           </Button>
-          <Button variant="outline" className="w-full rounded-full text-sm">
-            {t('login')}
-          </Button>
+          
+          {!user && (
+            <Button 
+              as={Link} 
+              to="/auth" 
+              variant="outline" 
+              className="w-full rounded-full text-sm"
+              onClick={onClose}
+            >
+              {t('login')}
+            </Button>
+          )}
         </div>
       </nav>
     </div>
