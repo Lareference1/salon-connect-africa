@@ -102,5 +102,10 @@ export const en = {
   phone: "Phone",
   email: "Email",
   address: "Address",
-  sendMessage: "Send us a message"
+  sendMessage: "Send us a message",
+  
+  // 404 page
+  pageNotFound: "Oops! Page not found",
+  pageNotFoundDesc: "The page you are looking for does not exist or has been moved.",
+  backToHome: "Back to home"
 };

@@ -102,5 +102,10 @@ export const fr = {
   phone: "Téléphone",
   email: "Email",
   address: "Adresse",
-  sendMessage: "Envoyez-nous un message"
+  sendMessage: "Envoyez-nous un message",
+  
+  // 404 page
+  pageNotFound: "Oups! Page introuvable",
+  pageNotFoundDesc: "La page que vous recherchez n'existe pas ou a été déplacée.",
+  backToHome: "Retour à l'accueil"
 };

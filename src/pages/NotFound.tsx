@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom';
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from '@/contexts/LanguageContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const NotFound = () => {
   const location = useLocation();
+  const { t } = useLanguage();
 
   useEffect(() => {
     console.error(
@@ -22,12 +24,12 @@ const NotFound = () => {
       <main className="flex-grow flex items-center justify-center p-4">
         <div className="text-center max-w-md">
           <h1 className="text-7xl font-display text-salon-primary mb-4">404</h1>
-          <p className="text-2xl text-salon-dark mb-6">Oops! Page introuvable</p>
-          <p className="text-gray-600 mb-8">
-            La page que vous recherchez n'existe pas ou a été déplacée.
+          <p className="text-2xl text-salon-dark dark:text-white mb-6">{t('pageNotFound')}</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-8">
+            {t('pageNotFoundDesc')}
           </p>
           <Button asChild className="bg-salon-primary hover:bg-salon-primary/90">
-            <Link to="/">Retour à l'accueil</Link>
+            <Link to="/">{t('backToHome')}</Link>
           </Button>
         </div>
       </main>
