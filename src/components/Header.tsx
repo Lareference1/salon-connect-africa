@@ -48,7 +48,7 @@ const Header = () => {
           <Button variant="ghost" size="icon">
             <User className="h-5 w-5" />
           </Button>
-          <Button className="bg-salon-primary hover:bg-salon-primary/90">
+          <Button className="bg-gradient-to-r from-salon-primary to-salon-primary/90 hover:from-salon-primary/90 hover:to-salon-primary shadow-md hover:shadow-lg transition-all duration-300 border-0 rounded-full px-6">
             {t('signUp')}
           </Button>
         </div>
@@ -98,7 +98,7 @@ const Header = () => {
               {t('about')}
             </Link>
             <div className="pt-2 flex flex-col space-y-2">
-              <Button className="w-full bg-salon-primary hover:bg-salon-primary/90">
+              <Button className="w-full bg-gradient-to-r from-salon-primary to-salon-primary/90 hover:from-salon-primary/90 hover:to-salon-primary shadow-md hover:shadow-lg transition-all duration-300 border-0 rounded-full">
                 {t('signUp')}
               </Button>
               <Button variant="outline" className="w-full">
