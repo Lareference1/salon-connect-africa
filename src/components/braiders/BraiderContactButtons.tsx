@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Calendar } from 'lucide-react';
+import { MessageSquare, Calendar, Phone, Mail } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -16,12 +16,14 @@ const BraiderContactButtons = ({ isAvailable }: BraiderContactButtonsProps) => {
   const { toast } = useToast();
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [isContactPopoverOpen, setIsContactPopoverOpen] = useState(false);
 
-  const handleContactClick = () => {
+  const handleContactClick = (method: string) => {
     toast({
       title: "Message envoyé",
-      description: "Votre message a été envoyé au tresseur. Il vous contactera bientôt.",
+      description: `Votre message a été envoyé au tresseur via ${method}. Il vous contactera bientôt.`,
     });
+    setIsContactPopoverOpen(false);
   };
 
   const handleScheduleClick = () => {
@@ -45,16 +47,50 @@ const BraiderContactButtons = ({ isAvailable }: BraiderContactButtonsProps) => {
 
   return (
     <div className="flex space-x-2">
-      <Button 
-        variant="default" 
-        size="sm" 
-        className="flex-1 bg-salon-primary hover:bg-salon-primary/90"
-        disabled={!isAvailable}
-        onClick={handleContactClick}
-      >
-        <MessageSquare className="h-4 w-4 mr-1" />
-        Contacter
-      </Button>
+      <Popover open={isContactPopoverOpen} onOpenChange={setIsContactPopoverOpen}>
+        <PopoverTrigger asChild>
+          <Button 
+            variant="default" 
+            size="sm" 
+            className="flex-1 bg-salon-primary hover:bg-salon-primary/90"
+            disabled={!isAvailable}
+          >
+            <MessageSquare className="h-4 w-4 mr-1" />
+            Contacter
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-64 p-0" align="start">
+          <div className="p-3">
+            <h3 className="font-medium mb-4 text-center">Moyens de contact</h3>
+            <div className="flex flex-col gap-2">
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => handleContactClick('messagerie')}
+              >
+                <MessageSquare className="h-4 w-4 mr-2" />
+                Messagerie
+              </Button>
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => handleContactClick('téléphone')}
+              >
+                <Phone className="h-4 w-4 mr-2" />
+                +33 6 12 34 56 78
+              </Button>
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => handleContactClick('email')}
+              >
+                <Mail className="h-4 w-4 mr-2" />
+                contact@example.com
+              </Button>
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
       
       <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
         <PopoverTrigger asChild>
