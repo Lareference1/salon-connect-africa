@@ -13,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Mail, Phone, Facebook, Mail as MailIcon, Instagram } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Provider } from "@supabase/supabase-js";
+import { useToast } from "@/hooks/use-toast";
 
 interface SignInFormProps {
   isLoading: boolean;
@@ -23,6 +24,7 @@ interface SignInFormProps {
 
 const SignInForm = ({ isLoading, setIsLoading, onSuccess, onError }: SignInFormProps) => {
   const { t } = useLanguage();
+  const { toast } = useToast();
   const [method, setMethod] = useState<"email" | "phone">("email");
   const [needsVerification, setNeedsVerification] = useState(false);
   const [contact, setContact] = useState("");
@@ -51,39 +53,87 @@ const SignInForm = ({ isLoading, setIsLoading, onSuccess, onError }: SignInFormP
     setIsLoading(true);
     try {
       if (method === "email") {
+        const email = (data as z.infer<typeof emailSchema>).email;
+        const password = (data as z.infer<typeof emailSchema>).password;
+        
+        console.log(`Attempting to sign in with email: ${email}`);
         const { data: emailData, error: emailError } = await supabase.auth.signInWithPassword({
-          email: (data as z.infer<typeof emailSchema>).email,
-          password: (data as z.infer<typeof emailSchema>).password,
+          email,
+          password,
         });
 
-        if (emailError) throw emailError;
+        if (emailError) {
+          console.error("Email sign-in error:", emailError);
+          
+          if (emailError.message.includes("Email not confirmed")) {
+            toast({
+              title: t("emailNotConfirmed") || "Email Not Confirmed",
+              description: t("checkYourEmailForVerificationLink") || "Please check your email for a verification link",
+              variant: "destructive",
+            });
+          } else if (emailError.message.includes("Invalid login credentials")) {
+            toast({
+              title: t("invalidCredentials") || "Invalid Credentials",
+              description: t("emailOrPasswordIncorrect") || "Email or password is incorrect. Please try again.",
+              variant: "destructive",
+            });
+          } else {
+            throw emailError;
+          }
+          
+          setIsLoading(false);
+          return;
+        }
+        
+        console.log("Login successful:", emailData);
         onSuccess();
       } else {
         // Format phone number to E.164 format
         const phoneNumber = (data as z.infer<typeof phoneSchema>).phone;
         const formattedPhone = phoneNumber.startsWith("+") ? phoneNumber : `+1${phoneNumber}`;
+        const password = (data as z.infer<typeof phoneSchema>).password;
         
+        console.log(`Attempting to sign in with phone: ${formattedPhone}`);
         const { data: phoneData, error: phoneError } = await supabase.auth.signInWithPassword({
           phone: formattedPhone,
-          password: (data as z.infer<typeof phoneSchema>).password,
+          password,
         });
 
         if (phoneError) {
+          console.error("Phone sign-in error:", phoneError);
+          
           // If error is about verification, show verification form
           if (phoneError.message.includes("verification")) {
             setContact(formattedPhone);
             setNeedsVerification(true);
             setIsLoading(false);
             return;
+          } else if (phoneError.message.includes("Invalid login credentials")) {
+            toast({
+              title: t("invalidCredentials") || "Invalid Credentials",
+              description: t("phoneOrPasswordIncorrect") || "Phone number or password is incorrect. Please try again.",
+              variant: "destructive",
+            });
+            setIsLoading(false);
+            return;
           }
+          
           throw phoneError;
         }
         
+        console.log("Login successful:", phoneData);
         onSuccess();
       }
     } catch (error: any) {
       console.error("Sign in error:", error);
-      onError(error.message || t("signInError") || "Error during sign in");
+      // Show a more user-friendly error message
+      let errorMessage = error.message || t("signInError") || "Error during sign in";
+      
+      if (errorMessage.includes("Failed to fetch")) {
+        errorMessage = t("connectionError") || "Connection error. Please check your internet connection.";
+      }
+      
+      onError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -92,6 +142,7 @@ const SignInForm = ({ isLoading, setIsLoading, onSuccess, onError }: SignInFormP
   const handleSocialLogin = async (provider: Provider) => {
     setIsLoading(true);
     try {
+      console.log(`Attempting to sign in with ${provider}`);
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
@@ -99,11 +150,34 @@ const SignInForm = ({ isLoading, setIsLoading, onSuccess, onError }: SignInFormP
         },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error(`${provider} sign-in error:`, error);
+        
+        // Handle known OAuth errors
+        if (error.message.includes("unsupported_provider")) {
+          toast({
+            title: t("unsupportedProvider") || "Unsupported Provider",
+            description: t("providerNotConfigured", { provider }) || `${provider} login is not configured. Please try another method.`,
+            variant: "destructive",
+          });
+          setIsLoading(false);
+          return;
+        }
+        
+        throw error;
+      }
+      
       // No need to call onSuccess here as the user will be redirected to the provider's auth page
+      console.log(`${provider} auth initiated:`, data);
     } catch (error: any) {
       console.error(`Sign in with ${provider} error:`, error);
-      onError(error.message || t("signInError") || `Error signing in with ${provider}`);
+      let errorMessage = error.message || t("signInError") || `Error signing in with ${provider}`;
+      
+      if (errorMessage.includes("Failed to fetch")) {
+        errorMessage = t("connectionError") || "Connection error. Please check your internet connection.";
+      }
+      
+      onError(errorMessage);
       setIsLoading(false);
     }
   };
@@ -260,7 +334,7 @@ const SignInForm = ({ isLoading, setIsLoading, onSuccess, onError }: SignInFormP
           type="button" 
           variant="outline"
           className="flex items-center justify-center gap-2"
-          onClick={() => handleSocialLogin('azure')}
+          onClick={() => handleSocialLogin('instagram')}
           disabled={isLoading}
         >
           <Instagram className="h-4 w-4" />
