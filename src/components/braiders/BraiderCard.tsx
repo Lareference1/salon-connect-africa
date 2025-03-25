@@ -43,18 +43,20 @@ const BraiderCard = ({ braider, onUpdate }: BraiderCardProps) => {
         </div>
         <CardContent className="p-6">
           <div className="flex justify-between items-center mb-2">
-            <h3 className="text-xl font-semibold">{braider.name}</h3>
-            {onUpdate && (
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="ml-2 bg-white/80 hover:bg-white"
-                onClick={() => setIsEditing(true)}
-              >
-                <Edit className="h-4 w-4 mr-1" />
-                Modifier
-              </Button>
-            )}
+            <div className="flex items-center gap-2">
+              <h3 className="text-xl font-semibold">{braider.name}</h3>
+              {onUpdate && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="bg-salon-primary text-white border-none hover:bg-salon-primary/90"
+                  onClick={() => setIsEditing(true)}
+                >
+                  <Edit className="h-4 w-4 mr-1" />
+                  Modifier
+                </Button>
+              )}
+            </div>
           </div>
           
           <div className="flex items-center text-gray-500 mb-2">
