@@ -10,7 +10,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLanguage } from "@/contexts/LanguageContext";
 import VerificationForm from "./VerificationForm";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Mail, Phone } from "lucide-react";
+import { Loader2, Mail, Phone, Facebook, Mail as MailIcon, Instagram } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 interface SignInFormProps {
   isLoading: boolean;
@@ -83,6 +84,25 @@ const SignInForm = ({ isLoading, setIsLoading, onSuccess, onError }: SignInFormP
       console.error("Sign in error:", error);
       onError(error.message || t("signInError") || "Error during sign in");
     } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSocialLogin = async (provider: 'facebook' | 'google' | 'instagram') => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth`,
+        },
+      });
+
+      if (error) throw error;
+      // No need to call onSuccess here as the user will be redirected to the provider's auth page
+    } catch (error: any) {
+      console.error(`Sign in with ${provider} error:`, error);
+      onError(error.message || t("socialSignInError") || `Error signing in with ${provider}`);
       setIsLoading(false);
     }
   };
@@ -200,6 +220,52 @@ const SignInForm = ({ isLoading, setIsLoading, onSuccess, onError }: SignInFormP
           </form>
         </Form>
       </Tabs>
+
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <Separator className="w-full" />
+        </div>
+        <div className="relative flex justify-center">
+          <span className="bg-background px-2 text-xs text-muted-foreground">
+            {t("orContinueWith") || "Or continue with"}
+          </span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-2">
+        <Button 
+          type="button" 
+          variant="outline"
+          className="flex items-center justify-center gap-2"
+          onClick={() => handleSocialLogin('google')}
+          disabled={isLoading}
+        >
+          <MailIcon className="h-4 w-4" />
+          <span className="sr-only md:not-sr-only md:text-xs">Google</span>
+        </Button>
+        
+        <Button 
+          type="button" 
+          variant="outline"
+          className="flex items-center justify-center gap-2"
+          onClick={() => handleSocialLogin('facebook')}
+          disabled={isLoading}
+        >
+          <Facebook className="h-4 w-4" />
+          <span className="sr-only md:not-sr-only md:text-xs">Facebook</span>
+        </Button>
+        
+        <Button 
+          type="button" 
+          variant="outline"
+          className="flex items-center justify-center gap-2"
+          onClick={() => handleSocialLogin('instagram')}
+          disabled={isLoading}
+        >
+          <Instagram className="h-4 w-4" />
+          <span className="sr-only md:not-sr-only md:text-xs">Instagram</span>
+        </Button>
+      </div>
     </div>
   );
 };

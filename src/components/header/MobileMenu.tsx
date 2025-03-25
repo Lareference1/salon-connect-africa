@@ -98,12 +98,13 @@ const MobileMenu = ({ isOpen, onClose, isLoading, onSignUp }: MobileMenuProps) =
             <Search className="h-5 w-5" />
           </Button>
           <Button 
-            as={Link}
-            to={user ? '/profile' : '/auth'}
             variant="ghost" 
             size="icon" 
             className="rounded-full p-2"
-            onClick={onClose}
+            onClick={() => {
+              navigate(user ? '/profile' : '/auth');
+              onClose();
+            }}
           >
             <User className="h-5 w-5" />
           </Button>
@@ -139,11 +140,12 @@ const MobileMenu = ({ isOpen, onClose, isLoading, onSignUp }: MobileMenuProps) =
           
           {!user && (
             <Button 
-              as={Link} 
-              to="/auth" 
               variant="outline" 
               className="w-full rounded-full text-sm"
-              onClick={onClose}
+              onClick={() => {
+                navigate('/auth');
+                onClose();
+              }}
             >
               {t('login')}
             </Button>

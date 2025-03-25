@@ -1,11 +1,9 @@
 
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Search, User, Loader2, LogOut } from "lucide-react";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/components/auth/AuthContext';
-import LanguageThemeToggle from '../LanguageThemeToggle';
-import { cn } from '@/lib/utils';
-import { Link, useNavigate } from 'react-router-dom';
 
 interface ActionButtonsProps {
   isLoading: boolean;
@@ -16,37 +14,34 @@ const ActionButtons = ({ isLoading, onSignUp }: ActionButtonsProps) => {
   const { t } = useLanguage();
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
-
-  const handleSignUp = () => {
+  
+  const handleAuthAction = () => {
     if (user) {
       signOut();
     } else {
       navigate('/auth');
     }
   };
-
+  
   return (
-    <div className="hidden md:flex items-center space-x-4">
-      <LanguageThemeToggle />
-      <Button variant="ghost" size="icon" className="rounded-full hover:bg-muted/50">
+    <div className="hidden md:flex items-center space-x-3">
+      <Button variant="ghost" size="icon" className="rounded-full p-2">
         <Search className="h-5 w-5" />
       </Button>
-      <Button 
-        as={Link}
-        to={user ? '/profile' : '/auth'}
-        variant="ghost" 
-        size="icon" 
-        className="rounded-full hover:bg-muted/50"
+      
+      <Button
+        variant="ghost"
+        size="icon"
+        className="rounded-full p-2"
+        onClick={() => navigate(user ? '/profile' : '/auth')}
       >
         <User className="h-5 w-5" />
       </Button>
+      
       <Button 
-        onClick={handleSignUp}
+        className="bg-gradient-to-r from-salon-primary to-salon-primary/90 hover:from-salon-primary/80 hover:to-salon-primary hover:scale-105 shadow-md hover:shadow-lg active:scale-95 transition-all duration-300 border-0 rounded-full text-sm"
+        onClick={handleAuthAction}
         disabled={isLoading}
-        className={cn(
-          "bg-gradient-to-r from-salon-primary to-salon-primary/90 hover:from-salon-primary/80 hover:to-salon-primary hover:scale-105 shadow-md hover:shadow-lg active:scale-95 transition-all duration-300 border-0 rounded-full px-6 text-sm",
-          isLoading && "opacity-80 cursor-not-allowed"
-        )}
       >
         {isLoading ? (
           <>
@@ -66,6 +61,16 @@ const ActionButtons = ({ isLoading, onSignUp }: ActionButtonsProps) => {
           </>
         )}
       </Button>
+      
+      {!user && (
+        <Button 
+          variant="outline" 
+          className="rounded-full text-sm"
+          onClick={() => navigate('/auth')}
+        >
+          {t('login')}
+        </Button>
+      )}
     </div>
   );
 };

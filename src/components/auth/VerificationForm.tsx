@@ -46,11 +46,18 @@ const VerificationForm = ({
   const verifyOTP = async (data: z.infer<typeof schema>) => {
     setIsLoading(true);
     try {
-      const { data: verifyData, error } = await supabase.auth.verifyOtp({
-        [method === "email" ? "email" : "phone"]: contact,
+      const verifyParams = {
         token: data.otp,
-        type: "sms", // Supabase uses 'sms' type for both SMS and email OTP
-      });
+        type: "sms" as const
+      };
+      
+      if (method === "email") {
+        verifyParams.email = contact;
+      } else {
+        verifyParams.phone = contact;
+      }
+      
+      const { data: verifyData, error } = await supabase.auth.verifyOtp(verifyParams);
 
       if (error) throw error;
       onSuccess();
@@ -72,14 +79,16 @@ const VerificationForm = ({
       let signInOptions = {};
       
       if (method === "email") {
-        signInOptions = { email: contact };
+        const { error } = await supabase.auth.signInWithOtp({
+          email: contact
+        });
+        if (error) throw error;
       } else {
-        signInOptions = { phone: contact };
+        const { error } = await supabase.auth.signInWithOtp({
+          phone: contact
+        });
+        if (error) throw error;
       }
-      
-      const { error } = await supabase.auth.signInWithOtp(signInOptions);
-      
-      if (error) throw error;
       
       // Start countdown
       let timer = 60;
