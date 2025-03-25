@@ -150,5 +150,12 @@ export const fr = {
   phoneOrPasswordIncorrect: "Numéro de téléphone ou mot de passe incorrect. Veuillez réessayer.",
   connectionError: "Erreur de connexion. Veuillez vérifier votre connexion internet.",
   unsupportedProvider: "Fournisseur non pris en charge",
-  providerNotConfigured: "La connexion {{provider}} n'est pas configurée. Veuillez essayer une autre méthode."
+  providerNotConfigured: "La connexion {{provider}} n'est pas configurée. Veuillez essayer une autre méthode.",
+  
+  // Terms and Privacy
+  termsOfService: "Conditions d'utilisation",
+  privacyPolicy: "Politique de confidentialité",
+  
+  // Navigation
+  back: "Retour",
 };

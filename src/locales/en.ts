@@ -150,5 +150,12 @@ export const en = {
   phoneOrPasswordIncorrect: "Phone number or password is incorrect. Please try again.",
   connectionError: "Connection error. Please check your internet connection.",
   unsupportedProvider: "Unsupported Provider",
-  providerNotConfigured: "{{provider}} login is not configured. Please try another method."
+  providerNotConfigured: "{{provider}} login is not configured. Please try another method.",
+  
+  // Terms and Privacy
+  termsOfService: "Terms of Service",
+  privacyPolicy: "Privacy Policy",
+  
+  // Navigation
+  back: "Back",
 };

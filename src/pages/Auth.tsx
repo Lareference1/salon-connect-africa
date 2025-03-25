@@ -12,6 +12,7 @@ import SignUpForm from "@/components/auth/SignUpForm";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Auth = () => {
   const { t } = useLanguage();
@@ -103,8 +104,17 @@ const Auth = () => {
                 </TabsContent>
               </Tabs>
             </CardContent>
-            <CardFooter className="flex justify-center text-sm text-muted-foreground">
-              {t("privacyNotice")}
+            <CardFooter className="flex flex-col justify-center text-sm text-muted-foreground space-y-2">
+              <p>{t("privacyNotice")}</p>
+              <div className="text-xs flex justify-center space-x-3">
+                <Link to="/terms" className="hover:underline hover:text-salon-primary transition-colors">
+                  {t("termsOfService")}
+                </Link>
+                <span>•</span>
+                <Link to="/privacy" className="hover:underline hover:text-salon-primary transition-colors">
+                  {t("privacyPolicy")}
+                </Link>
+              </div>
             </CardFooter>
           </Card>
         </div>
