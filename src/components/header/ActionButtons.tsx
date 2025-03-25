@@ -1,7 +1,7 @@
 
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Search, User, Loader2, LogOut } from "lucide-react";
+import { Search, User, Loader2, LogOut, Settings } from "lucide-react";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/components/auth/AuthContext';
 
@@ -33,9 +33,9 @@ const ActionButtons = ({ isLoading, onSignUp }: ActionButtonsProps) => {
         variant="ghost"
         size="icon"
         className="rounded-full p-2"
-        onClick={() => navigate(user ? '/profile' : '/auth')}
+        onClick={() => navigate(user ? '/settings' : '/auth')}
       >
-        <User className="h-5 w-5" />
+        {user ? <Settings className="h-5 w-5" /> : <User className="h-5 w-5" />}
       </Button>
       
       <Button 

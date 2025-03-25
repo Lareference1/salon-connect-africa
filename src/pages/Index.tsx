@@ -54,7 +54,9 @@ const Index = () => {
                         'bottom-1/4 right-1/5'
                        }
                        blur-xl`}
-          />
+          >
+            <div className="w-full h-full"></div>
+          </FloatingElement>
         ))}
       </div>
     </div>

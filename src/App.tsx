@@ -12,6 +12,7 @@ import Salons from "./pages/Salons";
 import Braiders from "./pages/Braiders";
 import About from "./pages/About";
 import Auth from "./pages/Auth";
+import UserSettings from "./pages/UserSettings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
                 <Route path="/braiders" element={<Braiders />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/settings" element={<UserSettings />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
