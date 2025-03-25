@@ -5,18 +5,21 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/components/auth/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 import SearchForm from '@/components/salons/SearchForm';
-import SalonCard from '@/components/salons/SalonCard';
+import SalonCard, { SalonData } from '@/components/salons/SalonCard';
 import NoResults from '@/components/salons/NoResults';
 import { salonsData } from '@/data/salonsData';
 
 const Salons = () => {
   const { t } = useLanguage();
+  const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [location, setLocation] = useState("");
   const [specialty, setSpecialty] = useState("");
   const [hiringOnly, setHiringOnly] = useState(false);
+  const [salonsState, setSalonsState] = useState(salonsData);
   const [filteredSalons, setFilteredSalons] = useState(salonsData);
   
   // Check if user is authenticated
@@ -33,7 +36,7 @@ const Salons = () => {
   }
   
   const handleSearch = () => {
-    let results = salonsData;
+    let results = salonsState;
     
     if (location) {
       results = results.filter(salon => 
@@ -52,6 +55,22 @@ const Salons = () => {
     }
     
     setFilteredSalons(results);
+  };
+
+  const handleUpdateSalon = (id: number, updatedData: Partial<SalonData>) => {
+    const updatedSalons = salonsState.map(salon => 
+      salon.id === id ? { ...salon, ...updatedData } : salon
+    );
+    
+    setSalonsState(updatedSalons);
+    setFilteredSalons(prev => 
+      prev.map(salon => salon.id === id ? { ...salon, ...updatedData } : salon)
+    );
+    
+    toast({
+      title: "Salon Updated",
+      description: `${updatedData.name || 'Salon'}'s information has been updated.`,
+    });
   };
 
   return (
@@ -80,7 +99,11 @@ const Salons = () => {
           {/* Results Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {filteredSalons.map((salon) => (
-              <SalonCard key={salon.id} salon={salon} />
+              <SalonCard 
+                key={salon.id} 
+                salon={salon} 
+                onUpdate={handleUpdateSalon}
+              />
             ))}
           </div>
           

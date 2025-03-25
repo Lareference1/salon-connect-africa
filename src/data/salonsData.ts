@@ -10,7 +10,8 @@ export const salonsData: SalonData[] = [
     reviews: 124,
     specialties: ["Box Braids", "Locs", "Twist Outs"],
     image: "https://images.unsplash.com/photo-1600948836101-f9ffda59d250?q=80&w=2036&auto=format&fit=crop",
-    hiringStatus: true
+    hiringStatus: true,
+    description: "Specializing in natural hair care and protective styles for over 10 years."
   },
   {
     id: 2,
@@ -20,7 +21,8 @@ export const salonsData: SalonData[] = [
     reviews: 98,
     specialties: ["Faux Locs", "Cornrows", "Crochet Braids"],
     image: "https://images.unsplash.com/photo-1582095133179-bfd08e2fc6b3?q=80&w=2187&auto=format&fit=crop",
-    hiringStatus: true
+    hiringStatus: true,
+    description: "Award-winning salon with a team of highly skilled stylists."
   },
   {
     id: 3,
@@ -30,7 +32,8 @@ export const salonsData: SalonData[] = [
     reviews: 210,
     specialties: ["Knotless Braids", "Senegalese Twist", "Feed-in Braids"],
     image: "https://images.unsplash.com/photo-1559599076-9c61d8e1b77c?q=80&w=2069&auto=format&fit=crop",
-    hiringStatus: false
+    hiringStatus: false,
+    description: "The premier destination for all your braiding needs in Atlanta."
   },
   {
     id: 4,
@@ -40,7 +43,8 @@ export const salonsData: SalonData[] = [
     reviews: 156,
     specialties: ["Passion Twists", "Box Braids", "Goddess Braids"],
     image: "https://images.unsplash.com/photo-1605497788044-5a32c7078486?q=80&w=2074&auto=format&fit=crop",
-    hiringStatus: true
+    hiringStatus: true,
+    description: "Focused on healthy hair practices and stunning protective styles."
   },
   {
     id: 5,
@@ -50,7 +54,8 @@ export const salonsData: SalonData[] = [
     reviews: 89,
     specialties: ["Fulani Braids", "Ghana Braids", "Micro Braids"],
     image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=1976&auto=format&fit=crop",
-    hiringStatus: true
+    hiringStatus: true,
+    description: "Family-owned salon with deep roots in traditional African braiding techniques."
   },
   {
     id: 6,
@@ -60,6 +65,7 @@ export const salonsData: SalonData[] = [
     reviews: 132,
     specialties: ["Flat Twists", "Bantu Knots", "Cornrows"],
     image: "https://images.unsplash.com/photo-1610563167394-f5e3c8bf9689?q=80&w=1974&auto=format&fit=crop",
-    hiringStatus: false
+    hiringStatus: false,
+    description: "Luxurious salon experience with a focus on scalp health and beautiful styles."
   }
 ];

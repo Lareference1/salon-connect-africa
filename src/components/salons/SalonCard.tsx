@@ -1,8 +1,11 @@
 
-import { MapPin, Star, Phone, Calendar } from 'lucide-react';
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useState } from 'react';
+import { Star, MapPin, Briefcase, Edit } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/components/auth/AuthContext';
+import { Badge } from '@/components/ui/badge';
+import SalonEditForm from './SalonEditForm';
 
 export interface SalonData {
   id: number;
@@ -13,79 +16,117 @@ export interface SalonData {
   specialties: string[];
   image: string;
   hiringStatus: boolean;
+  description?: string;
 }
 
 interface SalonCardProps {
   salon: SalonData;
+  onUpdate?: (id: number, data: Partial<SalonData>) => void;
 }
 
-const SalonCard = ({ salon }: SalonCardProps) => {
-  const { t } = useLanguage();
-  
+const SalonCard = ({ salon, onUpdate }: SalonCardProps) => {
+  const { user } = useAuth();
+  const [isEditOpen, setIsEditOpen] = useState(false);
+
+  const handleEditClick = () => {
+    setIsEditOpen(true);
+  };
+
+  const handleEditClose = () => {
+    setIsEditOpen(false);
+  };
+
+  const handleUpdate = (id: number, data: Partial<SalonData>) => {
+    if (onUpdate) {
+      onUpdate(id, data);
+    }
+    setIsEditOpen(false);
+  };
+
   return (
-    <Card key={salon.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300 dark:bg-gray-800 dark:border-gray-700 h-full flex flex-col">
-      <div className="relative h-40 sm:h-48">
-        <img 
-          src={salon.image} 
-          alt={salon.name}
-          className="h-full w-full object-cover"
-        />
-        {salon.hiringStatus && (
-          <div className="absolute top-2 right-2 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded">
-            {t('hiring')}
-          </div>
-        )}
-      </div>
-      <CardContent className="p-4 sm:p-6 flex flex-col flex-grow">
-        <h3 className="text-lg sm:text-xl font-semibold mb-2 dark:text-white line-clamp-1">{salon.name}</h3>
-        
-        <div className="flex items-center text-gray-500 dark:text-gray-400 mb-1 sm:mb-2">
-          <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1 flex-shrink-0" />
-          <span className="text-xs sm:text-sm truncate">{salon.location}</span>
-        </div>
-        
-        <div className="flex items-center text-gray-500 dark:text-gray-400 mb-2 sm:mb-3">
-          <Star className="h-3 w-3 sm:h-4 sm:w-4 text-salon-accent2 fill-salon-accent2 mr-1 flex-shrink-0" />
-          <span className="text-xs sm:text-sm">{salon.rating} ({salon.reviews} avis)</span>
-        </div>
-        
-        <div className="mb-3 sm:mb-4 flex-grow">
-          <h4 className="text-xs sm:text-sm font-medium mb-1 dark:text-gray-300">{t('specialties')}</h4>
-          <div className="flex flex-wrap gap-1">
-            {salon.specialties.slice(0, 3).map((specialty, index) => (
-              <span 
-                key={index}
-                className="inline-block bg-salon-primary/10 text-salon-primary text-xs px-2 py-0.5 rounded dark:bg-salon-primary/20"
+    <>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transition-all hover:shadow-lg">
+        <div className="relative h-48 w-full overflow-hidden">
+          <img
+            src={salon.image}
+            alt={salon.name}
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute top-2 right-2 flex gap-2">
+            {salon.hiringStatus && (
+              <Badge variant="default" className="bg-green-500 hover:bg-green-600">
+                Hiring
+              </Badge>
+            )}
+            {user && onUpdate && (
+              <Button 
+                size="icon" 
+                variant="secondary" 
+                className="h-8 w-8 rounded-full bg-white dark:bg-gray-700"
+                onClick={handleEditClick}
               >
-                {specialty}
-              </span>
-            ))}
-            {salon.specialties.length > 3 && (
-              <span className="inline-block text-xs text-gray-500">+{salon.specialties.length - 3}</span>
+                <Edit className="h-4 w-4" />
+                <span className="sr-only">Edit</span>
+              </Button>
             )}
           </div>
         </div>
-        
-        <div className="flex space-x-2 mt-auto">
+        <div className="p-4">
+          <h3 className="font-semibold text-lg mb-2 dark:text-white">{salon.name}</h3>
+          
+          <div className="flex items-center text-sm text-gray-600 dark:text-gray-300 mb-3">
+            <MapPin className="h-4 w-4 mr-1" />
+            <span>{salon.location}</span>
+          </div>
+          
+          <div className="flex items-center mb-3">
+            <div className="flex items-center">
+              <Star className={cn("h-4 w-4", salon.rating >= 4.5 ? "text-yellow-400" : "text-gray-400")} />
+              <span className="ml-1 text-sm font-medium">{salon.rating.toFixed(1)}</span>
+            </div>
+            <span className="mx-2 text-sm text-gray-400">•</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">{salon.reviews} reviews</span>
+          </div>
+          
+          <div className="flex flex-wrap gap-1 mb-4">
+            {salon.specialties.slice(0, 3).map((specialty, index) => (
+              <Badge key={index} variant="outline" className="bg-gray-100 dark:bg-gray-700 text-xs">
+                {specialty}
+              </Badge>
+            ))}
+            {salon.specialties.length > 3 && (
+              <Badge variant="outline" className="bg-gray-100 dark:bg-gray-700 text-xs">
+                +{salon.specialties.length - 3}
+              </Badge>
+            )}
+          </div>
+          
+          {salon.description && (
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
+              {salon.description}
+            </p>
+          )}
+          
           <Button 
-            variant="default" 
+            variant={salon.hiringStatus ? "default" : "outline"} 
             size="sm" 
-            className="flex-1 bg-salon-primary hover:bg-salon-primary/90 text-xs sm:text-sm py-1 h-auto"
+            className={salon.hiringStatus ? "w-full bg-salon-primary hover:bg-salon-primary/90" : "w-full"}
           >
-            <Phone className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-            Contact
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="flex-1 border-salon-accent1 text-salon-accent1 hover:bg-salon-accent1/10 dark:text-white dark:border-white text-xs sm:text-sm py-1 h-auto"
-          >
-            <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-            Rendez-vous
+            <Briefcase className="h-4 w-4 mr-2" />
+            {salon.hiringStatus ? "Apply Now" : "View Details"}
           </Button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+
+      {isEditOpen && (
+        <SalonEditForm 
+          salon={salon} 
+          open={isEditOpen} 
+          onClose={handleEditClose} 
+          onUpdate={handleUpdate}
+        />
+      )}
+    </>
   );
 };
 
