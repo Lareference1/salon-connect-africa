@@ -31,7 +31,7 @@ const DesktopNav = () => {
             <NavigationMenuTrigger className="bg-transparent hover:bg-transparent hover:text-salon-primary focus:bg-transparent data-[state=open]:bg-transparent text-salon-dark dark:text-white">
               {t('salons')}
             </NavigationMenuTrigger>
-            <NavigationMenuContent className="bg-white/95 dark:bg-salon-dark/95 backdrop-blur-sm p-3 rounded-md min-w-[200px]">
+            <NavigationMenuContent>
               <div className="grid gap-2">
                 <Link to="/salons">
                   {t('allSalons')}
