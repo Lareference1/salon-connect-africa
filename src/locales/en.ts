@@ -1,7 +1,10 @@
+
 export const en = {
   // Header
   home: "Home",
   salons: "Salons",
+  allSalons: "All Salons",
+  featuredSalons: "Featured Salons",
   braiders: "Braiders",
   about: "About",
   signUp: "Sign Up",

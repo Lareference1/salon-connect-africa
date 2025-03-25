@@ -1,7 +1,10 @@
+
 export const fr = {
   // Header
   home: "Accueil",
   salons: "Salons",
+  allSalons: "Tous les Salons",
+  featuredSalons: "Salons en Vedette",
   braiders: "Tresseuses",
   about: "À propos",
   signUp: "S'inscrire",
