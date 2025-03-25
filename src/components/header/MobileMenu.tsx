@@ -103,9 +103,6 @@ const MobileMenu = ({ isOpen, onClose, isLoading, onSignUp }: MobileMenuProps) =
         </Link>
         
         <div className="flex items-center space-x-3 py-3 px-3">
-          <Button variant="ghost" size="icon" className="rounded-full p-2">
-            <Search className="h-5 w-5" />
-          </Button>
           <Button 
             variant="ghost" 
             size="icon" 
