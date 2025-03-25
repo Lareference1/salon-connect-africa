@@ -6,17 +6,20 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import SearchForm from '@/components/braiders/SearchForm';
 import BraiderCard from '@/components/braiders/BraiderCard';
 import NoResults from '@/components/braiders/NoResults';
-import { braidersData } from '@/data/braidersData';
+import { braidersData, BraiderData } from '@/data/braidersData';
+import { useToast } from '@/hooks/use-toast';
 
 const Braiders = () => {
   const { t } = useLanguage();
+  const { toast } = useToast();
   const [location, setLocation] = useState("");
   const [specialty, setSpecialty] = useState("");
   const [availability, setAvailability] = useState("");
+  const [braidersState, setBraidersState] = useState(braidersData);
   const [filteredBraiders, setFilteredBraiders] = useState(braidersData);
   
   const handleSearch = () => {
-    let results = braidersData;
+    let results = braidersState;
     
     if (location) {
       results = results.filter(braider => 
@@ -35,6 +38,22 @@ const Braiders = () => {
     }
     
     setFilteredBraiders(results);
+  };
+
+  const handleUpdateBraider = (id: number, updatedData: Partial<BraiderData>) => {
+    const updatedBraiders = braidersState.map(braider => 
+      braider.id === id ? { ...braider, ...updatedData } : braider
+    );
+    
+    setBraidersState(updatedBraiders);
+    setFilteredBraiders(prev => 
+      prev.map(braider => braider.id === id ? { ...braider, ...updatedData } : braider)
+    );
+    
+    toast({
+      title: "Braider Updated",
+      description: `${updatedData.name || 'Braider'}'s information has been updated.`,
+    });
   };
 
   return (
@@ -63,7 +82,11 @@ const Braiders = () => {
           {/* Results Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredBraiders.map((braider) => (
-              <BraiderCard key={braider.id} braider={braider} />
+              <BraiderCard 
+                key={braider.id} 
+                braider={braider} 
+                onUpdate={handleUpdateBraider}
+              />
             ))}
           </div>
           

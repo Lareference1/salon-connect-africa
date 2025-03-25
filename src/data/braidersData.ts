@@ -1,4 +1,3 @@
-
 export interface BraiderData {
   id: number;
   name: string;
@@ -10,6 +9,7 @@ export interface BraiderData {
   availability: string;
   experience: string;
   status: 'available' | 'soon' | 'unavailable';
+  bio?: string;
 }
 
 export const braidersData: BraiderData[] = [
@@ -23,7 +23,8 @@ export const braidersData: BraiderData[] = [
     image: "https://images.unsplash.com/photo-1611432579699-484f7990b127?q=80&w=2070&auto=format&fit=crop",
     availability: "Disponible",
     experience: "7 ans",
-    status: "available"
+    status: "available",
+    bio: "Spécialiste des tresses africaines avec plus de 7 ans d'expérience."
   },
   {
     id: 2,
