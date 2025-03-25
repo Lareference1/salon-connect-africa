@@ -64,7 +64,7 @@ const ActionButtons = ({ isLoading, onSignUp }: ActionButtonsProps) => {
         {user ? <Settings className="h-5 w-5" /> : <User className="h-5 w-5" />}
       </Button>
       
-      {user ? (
+      {user && (
         <Button 
           className="bg-gradient-to-r from-salon-primary to-salon-primary/90 hover:from-salon-primary/80 hover:to-salon-primary hover:scale-105 shadow-md hover:shadow-lg active:scale-95 transition-all duration-300 border-0 rounded-full text-sm"
           onClick={handleAuthAction}
@@ -81,14 +81,6 @@ const ActionButtons = ({ isLoading, onSignUp }: ActionButtonsProps) => {
               {t('logout')}
             </>
           )}
-        </Button>
-      ) : (
-        <Button 
-          variant="outline" 
-          className="rounded-full text-sm"
-          onClick={() => navigate('/auth?tab=signup')}
-        >
-          {t('login')}
         </Button>
       )}
     </div>
