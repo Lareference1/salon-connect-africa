@@ -15,8 +15,8 @@ const Braiders = () => {
   const [location, setLocation] = useState("");
   const [specialty, setSpecialty] = useState("");
   const [availability, setAvailability] = useState("");
-  const [braidersState, setBraidersState] = useState(braidersData);
-  const [filteredBraiders, setFilteredBraiders] = useState(braidersData);
+  const [braidersState, setBraidersState] = useState(braidersData || []);
+  const [filteredBraiders, setFilteredBraiders] = useState(braidersData || []);
   
   const handleSearch = () => {
     let results = braidersState;
@@ -29,7 +29,7 @@ const Braiders = () => {
     
     if (specialty && specialty !== "all") {
       results = results.filter(braider => 
-        braider.specialties.some(s => s.toLowerCase().includes(specialty.toLowerCase()))
+        braider.specialties && braider.specialties.some(s => s.toLowerCase().includes(specialty.toLowerCase()))
       );
     }
     
@@ -41,6 +41,8 @@ const Braiders = () => {
   };
 
   const handleUpdateBraider = (id: number, updatedData: Partial<BraiderData>) => {
+    if (!braidersState) return;
+    
     const updatedBraiders = braidersState.map(braider => 
       braider.id === id ? { ...braider, ...updatedData } : braider
     );
@@ -81,17 +83,19 @@ const Braiders = () => {
           
           {/* Results Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredBraiders.map((braider) => (
-              <BraiderCard 
-                key={braider.id} 
-                braider={braider} 
-                onUpdate={handleUpdateBraider}
-              />
-            ))}
+            {filteredBraiders && filteredBraiders.length > 0 ? (
+              filteredBraiders.map((braider) => (
+                <BraiderCard 
+                  key={braider.id} 
+                  braider={braider} 
+                  onUpdate={handleUpdateBraider}
+                />
+              ))
+            ) : null}
           </div>
           
           {/* No Results Component */}
-          {filteredBraiders.length === 0 && <NoResults />}
+          {(!filteredBraiders || filteredBraiders.length === 0) && <NoResults />}
         </div>
       </main>
       <Footer />

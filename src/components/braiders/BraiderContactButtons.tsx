@@ -41,8 +41,11 @@ const BraiderContactButtons = ({ isAvailable }: BraiderContactButtonsProps) => {
 
   // Calculate disabled dates based on availability
   const getDisabledDates = () => {
-    if (!isAvailable) return [{ from: new Date(), to: addDays(new Date(), 365) }];
-    // If status is "soon", disable only the next few days
+    if (!isAvailable) {
+      // Return an array with a single object that disables all dates for the next year
+      return [{ from: new Date(), to: addDays(new Date(), 365) }];
+    }
+    // If status is available, disable only the next few days
     return [{ from: new Date(), to: addDays(new Date(), 2) }];
   };
 
