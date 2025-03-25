@@ -5,7 +5,6 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/components/auth/AuthContext';
-import { useToast } from '@/hooks/use-toast';
 import SearchForm from '@/components/salons/SearchForm';
 import SalonCard from '@/components/salons/SalonCard';
 import NoResults from '@/components/salons/NoResults';
@@ -15,7 +14,6 @@ const Salons = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const [location, setLocation] = useState("");
   const [specialty, setSpecialty] = useState("");
   const [hiringOnly, setHiringOnly] = useState(false);
@@ -24,13 +22,10 @@ const Salons = () => {
   // Check if user is authenticated
   useEffect(() => {
     if (!user) {
-      toast({
-        title: t('authRequired'),
-        description: t('pleaseLoginFirst'),
-      });
+      // Direct navigation to auth page without showing toast
       navigate('/auth');
     }
-  }, [user, navigate, toast, t]);
+  }, [user, navigate]);
 
   // If user is not authenticated, don't render the rest of the component
   if (!user) {
