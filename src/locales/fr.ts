@@ -1,3 +1,4 @@
+
 export const fr = {
   // Header
   home: "Accueil",
@@ -135,4 +136,9 @@ export const fr = {
   invalidPhone: "Numéro de téléphone invalide",
   otpRequired: "Le code de vérification est requis",
   loading: "Chargement...",
+  
+  // Adding missing translation keys
+  password: "Mot de passe",
+  verificationError: "Erreur lors de la vérification",
+  resendCodeError: "Erreur lors du renvoi du code"
 };

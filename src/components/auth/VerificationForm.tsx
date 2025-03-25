@@ -46,19 +46,19 @@ const VerificationForm = ({
   const verifyOTP = async (data: z.infer<typeof schema>) => {
     setIsLoading(true);
     try {
-      const verifyParams = method === "email" 
-        ? {
-            email: contact,
-            token: data.otp,
-            type: "signup" as const
-          }
-        : {
-            phone: contact,
-            token: data.otp,
-            type: "sms" as const
-          };
-      
-      const { data: verifyData, error } = await supabase.auth.verifyOtp(verifyParams);
+      const { data: verifyData, error } = await supabase.auth.verifyOtp(
+        method === "email" 
+          ? {
+              email: contact,
+              token: data.otp,
+              type: "signup"
+            }
+          : {
+              phone: contact,
+              token: data.otp,
+              type: "sms"
+            }
+      );
 
       if (error) throw error;
       onSuccess();

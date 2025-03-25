@@ -1,3 +1,4 @@
+
 export const en = {
   // Header
   home: "Home",
@@ -134,5 +135,10 @@ export const en = {
   invalidEmail: "Invalid email address",
   invalidPhone: "Invalid phone number",
   otpRequired: "Verification code is required",
-  loading: "Loading..."
+  loading: "Loading...",
+  
+  // Adding missing translation keys
+  password: "Password",
+  verificationError: "Error during verification",
+  resendCodeError: "Error resending code"
 };
