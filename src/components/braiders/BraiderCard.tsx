@@ -33,27 +33,27 @@ const BraiderCard = ({ braider, onUpdate }: BraiderCardProps) => {
 
   return (
     <>
-      <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-        <div className="relative h-64">
+      <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
+        <div className="relative h-40 sm:h-52">
           <img 
             src={braider.image} 
             alt={braider.name}
             className="h-full w-full object-cover"
           />
         </div>
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6 flex flex-col flex-grow">
           <div className="flex justify-between items-center mb-2">
-            <h3 className="text-xl font-semibold">{braider.name}</h3>
+            <h3 className="text-lg sm:text-xl font-semibold line-clamp-1">{braider.name}</h3>
+          </div>
+          
+          <div className="flex items-center text-gray-500 mb-1 sm:mb-2">
+            <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1 flex-shrink-0" />
+            <span className="text-xs sm:text-sm truncate">{braider.location}</span>
           </div>
           
           <div className="flex items-center text-gray-500 mb-2">
-            <MapPin className="h-4 w-4 mr-1" />
-            <span className="text-sm">{braider.location}</span>
-          </div>
-          
-          <div className="flex items-center text-gray-500 mb-2">
-            <Star className="h-4 w-4 text-salon-accent2 fill-salon-accent2 mr-1" />
-            <span className="text-sm">{braider.rating} ({braider.reviews} avis)</span>
+            <Star className="h-3 w-3 sm:h-4 sm:w-4 text-salon-accent2 fill-salon-accent2 mr-1 flex-shrink-0" />
+            <span className="text-xs sm:text-sm">{braider.rating} ({braider.reviews} avis)</span>
           </div>
           
           <BraiderAvailability 
@@ -64,13 +64,15 @@ const BraiderCard = ({ braider, onUpdate }: BraiderCardProps) => {
 
           {braider.bio && (
             <div className="mb-3">
-              <p className="text-sm text-gray-600">{braider.bio}</p>
+              <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">{braider.bio}</p>
             </div>
           )}
           
           <BraiderSpecialties specialties={braider.specialties} />
           
-          <BraiderContactButtons isAvailable={braider.status !== 'unavailable'} />
+          <div className="mt-auto pt-2">
+            <BraiderContactButtons isAvailable={braider.status !== 'unavailable'} />
+          </div>
         </CardContent>
       </Card>
 

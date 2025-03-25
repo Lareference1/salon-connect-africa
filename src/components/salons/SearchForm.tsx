@@ -26,10 +26,10 @@ const SearchForm = ({
   const { t } = useLanguage();
   
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-12">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+    <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-md mb-6 sm:mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-4">
         <div>
-          <label htmlFor="location" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label htmlFor="location" className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             {t('location')}
           </label>
           <Input 
@@ -37,16 +37,16 @@ const SearchForm = ({
             placeholder={t('location')} 
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            className="dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm"
           />
         </div>
         
         <div>
-          <label htmlFor="specialty" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label htmlFor="specialty" className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             {t('specialty')}
           </label>
           <Select value={specialty} onValueChange={setSpecialty}>
-            <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm">
               <SelectValue placeholder={t('selectSpecialty')} />
             </SelectTrigger>
             <SelectContent className="dark:bg-gray-800">
@@ -63,7 +63,7 @@ const SearchForm = ({
         <div className="flex items-end">
           <Button 
             variant="default" 
-            className="w-full bg-salon-primary hover:bg-salon-primary/90"
+            className="w-full bg-salon-primary hover:bg-salon-primary/90 text-sm"
             onClick={onSearch}
           >
             {t('search')}
@@ -79,7 +79,7 @@ const SearchForm = ({
           checked={hiringOnly}
           onChange={(e) => setHiringOnly(e.target.checked)}
         />
-        <label htmlFor="hiringOnly" className="text-sm text-gray-700 dark:text-gray-300">
+        <label htmlFor="hiringOnly" className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">
           {t('showOnlyHiring')}
         </label>
       </div>

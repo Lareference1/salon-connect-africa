@@ -1,3 +1,4 @@
+
 import { useAuth } from '@/components/auth/AuthContext';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
@@ -26,29 +27,29 @@ const Index = () => {
   if (!user) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-50 dark:from-salon-dark dark:to-gray-900">
-        <div className="flex flex-col items-center gap-4 pt-12">
+        <div className="flex flex-col items-center gap-4 pt-6 sm:pt-12 px-4">
           <Logo />
-          <h1 className="text-2xl md:text-3xl font-display text-salon-dark dark:text-white">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-display text-salon-dark dark:text-white text-center">
             <span className="text-salon-primary">{t('heroTitle')}</span>
           </h1>
         </div>
-        <div className="flex-grow flex items-center justify-center">
-          <div className="max-w-md mx-auto text-center px-4">
-            <div className="flex flex-col gap-4">
+        <div className="flex-grow flex items-center justify-center p-4">
+          <div className="max-w-md mx-auto text-center">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <Button 
-                className="bg-salon-primary hover:bg-salon-primary/90 text-white py-6 px-8 rounded-full text-lg"
+                className="bg-salon-primary hover:bg-salon-primary/90 text-white py-3 sm:py-6 px-4 sm:px-8 rounded-full text-sm sm:text-lg"
                 onClick={() => handleButtonClick('salon')}
               >
                 {t('iAmSalon')}
-                <ChevronRight className="ml-2 h-5 w-5" />
+                <ChevronRight className="ml-1 sm:ml-2 h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
               <Button 
                 variant="outline" 
-                className="border-salon-accent1 text-salon-accent1 hover:bg-salon-accent1/10 py-6 px-8 rounded-full text-lg dark:text-white dark:border-white"
+                className="border-salon-accent1 text-salon-accent1 hover:bg-salon-accent1/10 py-3 sm:py-6 px-4 sm:px-8 rounded-full text-sm sm:text-lg dark:text-white dark:border-white"
                 onClick={() => handleButtonClick('braider')}
               >
                 {t('iAmBraider')}
-                <ChevronRight className="ml-2 h-5 w-5" />
+                <ChevronRight className="ml-1 sm:ml-2 h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
             </div>
           </div>
@@ -94,16 +95,16 @@ const Index = () => {
             delay={i * 0.5}
             duration={3 + i}
             className={`absolute bg-salon-primary/5 dark:bg-salon-primary/10 rounded-full
-                       ${i % 3 === 0 ? 'w-64 h-64' : i % 2 === 0 ? 'w-40 h-40' : 'w-24 h-24'}
-                       ${
-                        i === 0 ? 'top-1/4 left-1/5' :
-                        i === 1 ? 'top-3/4 left-1/4' :
-                        i === 2 ? 'top-2/3 right-1/4' :
-                        i === 3 ? 'top-1/5 right-1/6' :
-                        i === 4 ? 'top-1/2 left-1/3' :
-                        'bottom-1/4 right-1/5'
-                       }
-                       blur-xl`}
+                     ${i % 3 === 0 ? 'w-32 sm:w-64 h-32 sm:h-64' : i % 2 === 0 ? 'w-24 sm:w-40 h-24 sm:h-40' : 'w-16 sm:w-24 h-16 sm:h-24'}
+                     ${
+                      i === 0 ? 'top-1/4 left-1/5' :
+                      i === 1 ? 'top-3/4 left-1/4' :
+                      i === 2 ? 'top-2/3 right-1/4' :
+                      i === 3 ? 'top-1/5 right-1/6' :
+                      i === 4 ? 'top-1/2 left-1/3' :
+                      'bottom-1/4 right-1/5'
+                     }
+                     blur-xl`}
           >
             <div className="w-full h-full"></div>
           </FloatingElement>

@@ -58,10 +58,10 @@ const Salons = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow bg-gray-50 dark:bg-gray-900">
-        <div className="container mx-auto px-4 py-12">
-          <div className="max-w-4xl mx-auto text-center mb-12">
-            <h1 className="text-4xl font-display mb-4 dark:text-white">{t('discoverSalons')}</h1>
-            <p className="text-lg text-gray-600 dark:text-gray-300">
+        <div className="container mx-auto px-4 py-8 sm:py-12">
+          <div className="max-w-4xl mx-auto text-center mb-8 sm:mb-12">
+            <h1 className="text-3xl sm:text-4xl font-display mb-3 sm:mb-4 dark:text-white">{t('discoverSalons')}</h1>
+            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300">
               {t('findBestSalons')}
             </p>
           </div>
@@ -78,7 +78,7 @@ const Salons = () => {
           />
           
           {/* Results Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {filteredSalons.map((salon) => (
               <SalonCard key={salon.id} salon={salon} />
             ))}

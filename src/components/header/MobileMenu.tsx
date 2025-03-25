@@ -19,6 +19,7 @@ const MobileMenu = ({ isOpen, onClose, isLoading, onSignUp }: MobileMenuProps) =
   const location = useLocation();
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
 
   if (!isOpen) return null;
 
@@ -42,8 +43,15 @@ const MobileMenu = ({ isOpen, onClose, isLoading, onSignUp }: MobileMenuProps) =
     onClose();
   };
 
+  const toggleSubmenu = (menuId: string) => {
+    setExpandedMenus(prev => ({
+      ...prev,
+      [menuId]: !prev[menuId]
+    }));
+  };
+
   return (
-    <div className="md:hidden absolute top-16 left-0 right-0 bg-white/95 dark:bg-salon-dark/95 backdrop-blur-sm shadow-md py-4 px-4 z-50 animate-fade-in">
+    <div className="md:hidden fixed top-16 left-0 right-0 bottom-0 bg-white/95 dark:bg-salon-dark/95 backdrop-blur-sm shadow-md py-4 px-4 z-50 overflow-y-auto animate-fade-in">
       <nav className="flex flex-col space-y-1">
         <Link 
           to="/" 
@@ -59,15 +67,20 @@ const MobileMenu = ({ isOpen, onClose, isLoading, onSignUp }: MobileMenuProps) =
         {user && (
           <>
             <div className="py-1 px-3">
-              <div className="flex justify-between items-center cursor-pointer py-2" 
-                  onClick={() => {
-                    const subMenu = document.getElementById('salons-submenu');
-                    if (subMenu) subMenu.classList.toggle('hidden');
-                  }}>
+              <div 
+                className="flex justify-between items-center cursor-pointer py-2"
+                onClick={() => toggleSubmenu('salons')}
+              >
                 <span className="text-salon-dark dark:text-white">{t('salons')}</span>
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className={cn(
+                  "h-4 w-4 transition-transform",
+                  expandedMenus['salons'] && "transform rotate-180"
+                )} />
               </div>
-              <div id="salons-submenu" className="hidden pl-4 space-y-2 py-2">
+              <div className={cn(
+                "pl-4 space-y-2 py-2 transition-all duration-200 overflow-hidden",
+                expandedMenus['salons'] ? "max-h-40" : "max-h-0"
+              )}>
                 <button 
                   className="block py-2 text-salon-dark dark:text-white hover:text-salon-primary transition-colors"
                   onClick={() => handleProtectedNavigation('/salons')}

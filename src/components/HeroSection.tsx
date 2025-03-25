@@ -25,30 +25,30 @@ const HeroSection = () => {
   };
 
   return (
-    <div className="pattern-bg py-20 md:py-28 dark:bg-salon-dark dark:bg-opacity-95">
+    <div className="pattern-bg py-12 md:py-20 lg:py-28 dark:bg-salon-dark dark:bg-opacity-95">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-display mb-6 leading-tight text-salon-dark dark:text-white">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display mb-4 sm:mb-6 leading-tight text-salon-dark dark:text-white">
             <span className="text-salon-primary">{t('heroTitle')}</span>
           </h1>
-          <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-8">
+          <p className="text-base sm:text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-6 sm:mb-8">
             {t('heroSubtitle')}
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <div className="flex flex-row justify-center gap-3 sm:gap-4">
             <Button 
-              className="bg-salon-primary hover:bg-salon-primary/90 text-white py-6 px-8 rounded-full text-lg"
+              className="bg-salon-primary hover:bg-salon-primary/90 text-white py-3 sm:py-6 px-4 sm:px-8 rounded-full text-sm sm:text-lg flex-1 sm:flex-none"
               onClick={() => handleButtonClick('salon')}
             >
               {t('iAmSalon')}
-              <ChevronRight className="ml-2 h-5 w-5" />
+              <ChevronRight className="ml-1 sm:ml-2 h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
             <Button 
               variant="outline" 
-              className="border-salon-accent1 text-salon-accent1 hover:bg-salon-accent1/10 py-6 px-8 rounded-full text-lg dark:text-white dark:border-white"
+              className="border-salon-accent1 text-salon-accent1 hover:bg-salon-accent1/10 py-3 sm:py-6 px-4 sm:px-8 rounded-full text-sm sm:text-lg flex-1 sm:flex-none dark:text-white dark:border-white"
               onClick={() => handleButtonClick('braider')}
             >
               {t('iAmBraider')}
-              <ChevronRight className="ml-2 h-5 w-5" />
+              <ChevronRight className="ml-1 sm:ml-2 h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
           </div>
         </div>
