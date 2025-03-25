@@ -1,14 +1,79 @@
 
-import Header from '@/components/Header';
+import { useAuth } from '@/components/auth/AuthContext';
 import Footer from '@/components/Footer';
+import Header from '@/components/Header';
 import HeroSection from '@/components/HeroSection';
 import FeaturesSection from '@/components/FeaturesSection';
 import HowItWorks from '@/components/HowItWorks';
 import TestimonialsSection from '@/components/TestimonialsSection';
 import CtaSection from '@/components/CtaSection';
 import FloatingElement from '@/components/FloatingElement';
+import Logo from '@/components/header/Logo';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { Button } from '@/components/ui/button';
+import { ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
+  const { user } = useAuth();
+  const { t } = useLanguage();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleButtonClick = (type: 'salon' | 'braider') => {
+    if (!user) {
+      toast({
+        title: t('authRequired'),
+        description: t('pleaseLoginFirst'),
+      });
+      navigate('/auth');
+    } else {
+      if (type === 'salon') {
+        navigate('/salons');
+      } else if (type === 'braider') {
+        navigate('/braiders');
+      }
+    }
+  };
+
+  // Simple version before login
+  if (!user) {
+    return (
+      <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-50 dark:from-salon-dark dark:to-gray-900">
+        <div className="flex justify-center pt-6">
+          <Logo />
+        </div>
+        <div className="flex-grow flex items-center justify-center">
+          <div className="max-w-md mx-auto text-center px-4">
+            <h1 className="text-4xl md:text-6xl font-display mb-10 leading-tight text-salon-dark dark:text-white">
+              <span className="text-salon-primary">{t('heroTitle')}</span>
+            </h1>
+            <div className="flex flex-col gap-4">
+              <Button 
+                className="bg-salon-primary hover:bg-salon-primary/90 text-white py-6 px-8 rounded-full text-lg"
+                onClick={() => handleButtonClick('salon')}
+              >
+                {t('iAmSalon')}
+                <ChevronRight className="ml-2 h-5 w-5" />
+              </Button>
+              <Button 
+                variant="outline" 
+                className="border-salon-accent1 text-salon-accent1 hover:bg-salon-accent1/10 py-6 px-8 rounded-full text-lg dark:text-white dark:border-white"
+                onClick={() => handleButtonClick('braider')}
+              >
+                {t('iAmBraider')}
+                <ChevronRight className="ml-2 h-5 w-5" />
+              </Button>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Full version after login
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
       <Header />

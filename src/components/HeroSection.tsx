@@ -2,31 +2,17 @@
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/components/auth/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
 
 const HeroSection = () => {
   const { t } = useLanguage();
-  const { user } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   const handleButtonClick = (type: 'salon' | 'braider') => {
-    if (!user) {
-      // If not logged in, redirect to auth page
-      toast({
-        title: t('authRequired'),
-        description: t('pleaseLoginFirst'),
-      });
-      navigate('/auth');
-    } else {
-      // If logged in, redirect based on type
-      if (type === 'salon') {
-        navigate('/salons');
-      } else if (type === 'braider') {
-        navigate('/braiders');
-      }
+    if (type === 'salon') {
+      navigate('/salons');
+    } else if (type === 'braider') {
+      navigate('/braiders');
     }
   };
 
