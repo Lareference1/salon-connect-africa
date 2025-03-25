@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Menu, X, Search, User, Scissors, ChevronDown } from "lucide-react";
+import { Menu, X, Search, User, Scissors, ChevronDown, Loader2 } from "lucide-react";
 import LanguageThemeToggle from './LanguageThemeToggle';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -19,6 +19,7 @@ import { cn } from '@/lib/utils';
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { t } = useLanguage();
   const isMobile = useIsMobile();
   const location = useLocation();
@@ -37,6 +38,16 @@ const Header = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleSignUp = () => {
+    setIsLoading(true);
+    // Simulate API call or authentication process
+    setTimeout(() => {
+      setIsLoading(false);
+      // In a real app, you'd navigate to the sign-up page after authentication
+      window.location.href = '/signup';
+    }, 1000);
+  };
 
   return (
     <header className={cn(
@@ -117,8 +128,22 @@ const Header = () => {
           <Button variant="ghost" size="icon" className="rounded-full hover:bg-muted/50">
             <User className="h-5 w-5" />
           </Button>
-          <Button className="bg-gradient-to-r from-salon-primary to-salon-primary/90 hover:from-salon-primary/90 hover:to-salon-primary shadow-md hover:shadow-lg transition-all duration-300 border-0 rounded-full px-6 text-sm">
-            {t('signUp')}
+          <Button 
+            onClick={handleSignUp}
+            disabled={isLoading}
+            className={cn(
+              "bg-gradient-to-r from-salon-primary to-salon-primary/90 hover:from-salon-primary/80 hover:to-salon-primary hover:scale-105 shadow-md hover:shadow-lg active:scale-95 transition-all duration-300 border-0 rounded-full px-6 text-sm",
+              isLoading && "opacity-80 cursor-not-allowed"
+            )}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                {t('signUp')}...
+              </>
+            ) : (
+              t('signUp')
+            )}
           </Button>
         </div>
         
@@ -209,8 +234,22 @@ const Header = () => {
             </div>
             
             <div className="pt-2 flex flex-col space-y-2 px-3">
-              <Button className="w-full bg-gradient-to-r from-salon-primary to-salon-primary/90 hover:from-salon-primary/90 hover:to-salon-primary shadow-md hover:shadow-lg transition-all duration-300 border-0 rounded-full text-sm">
-                {t('signUp')}
+              <Button 
+                className={cn(
+                  "w-full bg-gradient-to-r from-salon-primary to-salon-primary/90 hover:from-salon-primary/80 hover:to-salon-primary hover:scale-105 shadow-md hover:shadow-lg active:scale-95 transition-all duration-300 border-0 rounded-full text-sm",
+                  isLoading && "opacity-80 cursor-not-allowed"
+                )}
+                onClick={handleSignUp}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    {t('signUp')}...
+                  </>
+                ) : (
+                  t('signUp')
+                )}
               </Button>
               <Button variant="outline" className="w-full rounded-full text-sm">
                 {t('login')}
