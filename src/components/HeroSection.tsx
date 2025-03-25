@@ -3,12 +3,20 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/components/auth/AuthContext";
 
 const HeroSection = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleButtonClick = (type: 'salon' | 'braider') => {
+    if (!user) {
+      // Direct navigation to auth page without showing toast
+      navigate('/auth');
+      return;
+    }
+    
     if (type === 'salon') {
       navigate('/salons');
     } else if (type === 'braider') {

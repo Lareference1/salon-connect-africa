@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown, Search, User, Loader2, LogOut } from "lucide-react";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/components/auth/AuthContext';
-import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
 interface MobileMenuProps {
@@ -20,7 +19,6 @@ const MobileMenu = ({ isOpen, onClose, isLoading, onSignUp }: MobileMenuProps) =
   const location = useLocation();
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   if (!isOpen) return null;
 
@@ -35,10 +33,7 @@ const MobileMenu = ({ isOpen, onClose, isLoading, onSignUp }: MobileMenuProps) =
 
   const handleProtectedNavigation = (path: string) => {
     if (!user) {
-      toast({
-        title: t('authRequired'),
-        description: t('pleaseLoginFirst'),
-      });
+      // Direct navigation to auth page without showing toast
       navigate('/auth');
       onClose();
       return;

@@ -2,7 +2,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/components/auth/AuthContext';
-import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import {
   NavigationMenu,
@@ -17,14 +16,10 @@ const DesktopNav = () => {
   const location = useLocation();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   const handleProtectedNavigation = (path: string) => {
     if (!user) {
-      toast({
-        title: t('authRequired'),
-        description: t('pleaseLoginFirst'),
-      });
+      // Direct navigation to auth page without showing toast
       navigate('/auth');
       return;
     }

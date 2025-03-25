@@ -1,4 +1,3 @@
-
 import { useAuth } from '@/components/auth/AuthContext';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
@@ -13,28 +12,14 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
   const { user } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   const handleButtonClick = (type: 'salon' | 'braider') => {
-    if (!user) {
-      toast({
-        title: t('authRequired'),
-        description: t('pleaseLoginFirst'),
-      });
-      navigate('/auth');
-    } else {
-      if (type === 'salon') {
-        navigate('/salons');
-      } else if (type === 'braider') {
-        navigate('/braiders');
-      }
-    }
+    navigate('/auth');
   };
 
   // Simple version before login
