@@ -172,7 +172,7 @@ const Braiders = () => {
                     <SelectValue placeholder="Sélectionner une spécialité" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Toutes les spécialités</SelectItem>
+                    <SelectItem value="all">Toutes les spécialités</SelectItem>
                     <SelectItem value="Box Braids">Box Braids</SelectItem>
                     <SelectItem value="Knotless">Knotless Braids</SelectItem>
                     <SelectItem value="Locs">Locs</SelectItem>
@@ -191,7 +191,7 @@ const Braiders = () => {
                     <SelectValue placeholder="Sélectionner la disponibilité" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Toutes disponibilités</SelectItem>
+                    <SelectItem value="all">Toutes disponibilités</SelectItem>
                     <SelectItem value="available">Disponible maintenant</SelectItem>
                     <SelectItem value="soon">Disponible prochainement</SelectItem>
                   </SelectContent>

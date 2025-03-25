@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -139,7 +138,7 @@ const Salons = () => {
                     <SelectValue placeholder={t('selectSpecialty')} />
                   </SelectTrigger>
                   <SelectContent className="dark:bg-gray-800">
-                    <SelectItem value="">{t('allSpecialties')}</SelectItem>
+                    <SelectItem value="all">{t('allSpecialties')}</SelectItem>
                     <SelectItem value="Box Braids">Box Braids</SelectItem>
                     <SelectItem value="Knotless">Knotless Braids</SelectItem>
                     <SelectItem value="Locs">Locs</SelectItem>
