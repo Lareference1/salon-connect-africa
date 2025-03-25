@@ -6,11 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLanguage } from "@/contexts/LanguageContext";
 import VerificationForm from "./VerificationForm";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Mail, Phone, Facebook, Mail as MailIcon, Instagram } from "lucide-react";
+import { Loader2, Mail, Facebook, Mail as MailIcon, Instagram } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Provider } from "@supabase/supabase-js";
 
@@ -23,7 +22,6 @@ interface SignUpFormProps {
 
 const SignUpForm = ({ isLoading, setIsLoading, onSuccess, onError }: SignUpFormProps) => {
   const { t } = useLanguage();
-  const [method, setMethod] = useState<"email" | "phone">("email");
   const [needsVerification, setNeedsVerification] = useState(false);
   const [contact, setContact] = useState("");
 
@@ -33,51 +31,27 @@ const SignUpForm = ({ isLoading, setIsLoading, onSuccess, onError }: SignUpFormP
     password: z.string().min(6, t("passwordMinLength") || "Password must be at least 6 characters"),
   });
 
-  // Phone schema
-  const phoneSchema = z.object({
-    phone: z.string().min(10, t("invalidPhone") || "Invalid phone number"),
-    password: z.string().min(6, t("passwordMinLength") || "Password must be at least 6 characters"),
+  // Create form based on email method only
+  const form = useForm<z.infer<typeof emailSchema>>({
+    resolver: zodResolver(emailSchema),
+    defaultValues: { email: "", password: "" },
   });
 
-  // Create form based on selected method
-  const form = useForm<z.infer<typeof emailSchema> | z.infer<typeof phoneSchema>>({
-    resolver: zodResolver(method === "email" ? emailSchema : phoneSchema),
-    defaultValues: method === "email" 
-      ? { email: "", password: "" } 
-      : { phone: "", password: "" },
-  });
-
-  const handleSignUp = async (data: z.infer<typeof emailSchema> | z.infer<typeof phoneSchema>) => {
+  const handleSignUp = async (data: z.infer<typeof emailSchema>) => {
     setIsLoading(true);
     try {
-      if (method === "email") {
-        const { data: emailData, error: emailError } = await supabase.auth.signUp({
-          email: (data as z.infer<typeof emailSchema>).email,
-          password: (data as z.infer<typeof emailSchema>).password,
-          options: {
-            emailRedirectTo: window.location.origin,
-          }
-        });
+      const { data: emailData, error: emailError } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          emailRedirectTo: window.location.origin,
+        }
+      });
 
-        if (emailError) throw emailError;
-        
-        setContact((data as z.infer<typeof emailSchema>).email);
-        setNeedsVerification(true);
-      } else {
-        // Format phone number to E.164 format
-        const phoneNumber = (data as z.infer<typeof phoneSchema>).phone;
-        const formattedPhone = phoneNumber.startsWith("+") ? phoneNumber : `+1${phoneNumber}`;
-        
-        const { data: phoneData, error: phoneError } = await supabase.auth.signUp({
-          phone: formattedPhone,
-          password: (data as z.infer<typeof phoneSchema>).password,
-        });
-
-        if (phoneError) throw phoneError;
-        
-        setContact(formattedPhone);
-        setNeedsVerification(true);
-      }
+      if (emailError) throw emailError;
+      
+      setContact(data.email);
+      setNeedsVerification(true);
     } catch (error: any) {
       console.error("Sign up error:", error);
       onError(error.message || t("signUpError") || "Error during sign up");
@@ -114,7 +88,7 @@ const SignUpForm = ({ isLoading, setIsLoading, onSuccess, onError }: SignUpFormP
   if (needsVerification) {
     return (
       <VerificationForm
-        method={method}
+        method="email"
         contact={contact}
         isLoading={isLoading}
         setIsLoading={setIsLoading}
@@ -126,98 +100,58 @@ const SignUpForm = ({ isLoading, setIsLoading, onSuccess, onError }: SignUpFormP
 
   return (
     <div className="space-y-4">
-      <Tabs 
-        value={method} 
-        onValueChange={(value) => setMethod(value as "email" | "phone")}
-        className="w-full"
-      >
-        <TabsList className="grid w-full grid-cols-2 mb-6">
-          <TabsTrigger value="email" className="flex items-center gap-2">
-            <Mail className="h-4 w-4" />
-            {t("email")}
-          </TabsTrigger>
-          <TabsTrigger value="phone" className="flex items-center gap-2">
-            <Phone className="h-4 w-4" />
-            {t("phone")}
-          </TabsTrigger>
-        </TabsList>
-        
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSignUp)} className="space-y-4">
-            <TabsContent value="email" className="space-y-4">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("email")}</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="email" 
-                        placeholder="your.name@example.com" 
-                        {...field} 
-                        disabled={isLoading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </TabsContent>
-            
-            <TabsContent value="phone" className="space-y-4">
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("phone")}</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="tel" 
-                        placeholder="+12345678900" 
-                        {...field} 
-                        disabled={isLoading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </TabsContent>
-            
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("password")}</FormLabel>
-                  <FormControl>
-                    <Input 
-                      type="password" 
-                      placeholder="••••••••" 
-                      {...field} 
-                      disabled={isLoading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t("loading")}
-                </>
-              ) : (
-                t("signUp")
-              )}
-            </Button>
-          </form>
-        </Form>
-      </Tabs>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSignUp)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("email")}</FormLabel>
+                <FormControl>
+                  <Input 
+                    type="email" 
+                    placeholder="your.name@example.com" 
+                    {...field} 
+                    disabled={isLoading}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("password")}</FormLabel>
+                <FormControl>
+                  <Input 
+                    type="password" 
+                    placeholder="••••••••" 
+                    {...field} 
+                    disabled={isLoading}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                {t("loading")}
+              </>
+            ) : (
+              t("signUp")
+            )}
+          </Button>
+        </form>
+      </Form>
 
       <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">

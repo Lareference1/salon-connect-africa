@@ -46,17 +46,12 @@ const VerificationForm = ({
   const verifyOTP = async (data: z.infer<typeof schema>) => {
     setIsLoading(true);
     try {
-      const verifyParams = method === "email" 
-        ? {
-            email: contact,
-            token: data.otp,
-            type: "signup" as const
-          }
-        : {
-            phone: contact,
-            token: data.otp,
-            type: "sms" as const
-          };
+      // Since we only support email now, we can simplify this logic
+      const verifyParams = {
+        email: contact,
+        token: data.otp,
+        type: "signup" as const
+      };
       
       const { data: verifyData, error } = await supabase.auth.verifyOtp(verifyParams);
 
@@ -77,17 +72,11 @@ const VerificationForm = ({
     setResendDisabled(true);
     
     try {
-      if (method === "email") {
-        const { error } = await supabase.auth.signInWithOtp({
-          email: contact
-        });
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.auth.signInWithOtp({
-          phone: contact
-        });
-        if (error) throw error;
-      }
+      const { error } = await supabase.auth.signInWithOtp({
+        email: contact
+      });
+      
+      if (error) throw error;
       
       // Start countdown
       let timer = 60;
@@ -117,9 +106,7 @@ const VerificationForm = ({
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>{t("verificationRequired") || "Verification Required"}</AlertTitle>
         <AlertDescription>
-          {method === "email" 
-            ? (t("verificationEmailSent") || `We've sent a verification code to ${contact}.`) 
-            : (t("verificationSmsSent") || `We've sent a verification code to ${contact}.`)}
+          {t("verificationEmailSent") || `We've sent a verification code to ${contact}.`}
         </AlertDescription>
       </Alert>
       
