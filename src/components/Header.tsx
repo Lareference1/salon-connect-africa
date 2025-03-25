@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Menu, X, Search, User } from "lucide-react";
+import { Menu, X, Search, User, Scissors } from "lucide-react";
 import LanguageThemeToggle from './LanguageThemeToggle';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -13,9 +13,14 @@ const Header = () => {
   return (
     <header className="w-full bg-white dark:bg-salon-dark dark:text-white shadow-sm py-4 sticky top-0 z-50">
       <div className="container mx-auto px-4 flex justify-between items-center">
-        <Link to="/" className="flex items-center">
-          <span className="text-2xl font-display text-salon-primary tracking-wide">SalonConnect</span>
-          <span className="text-salon-accent1 ml-1 text-sm">Africa</span>
+        <Link to="/" className="flex items-center group">
+          <div className="mr-2 p-1.5 bg-salon-primary rounded-md flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+            <Scissors className="h-4 w-4 text-white" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-xl font-display text-salon-primary tracking-wide leading-tight">SalonConnect</span>
+            <span className="text-salon-accent1 text-xs -mt-1 font-medium">Africa</span>
+          </div>
         </Link>
         
         {/* Navigation - Desktop */}
