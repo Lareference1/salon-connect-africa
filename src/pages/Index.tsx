@@ -41,14 +41,14 @@ const Index = () => {
   if (!user) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-50 dark:from-salon-dark dark:to-gray-900">
-        <div className="flex justify-center pt-6">
+        <div className="flex flex-col items-center gap-4 pt-12">
           <Logo />
+          <h1 className="text-2xl md:text-3xl font-display text-salon-dark dark:text-white">
+            <span className="text-salon-primary">{t('heroTitle')}</span>
+          </h1>
         </div>
         <div className="flex-grow flex items-center justify-center">
           <div className="max-w-md mx-auto text-center px-4">
-            <h1 className="text-4xl md:text-6xl font-display mb-10 leading-tight text-salon-dark dark:text-white">
-              <span className="text-salon-primary">{t('heroTitle')}</span>
-            </h1>
             <div className="flex flex-col gap-4">
               <Button 
                 className="bg-salon-primary hover:bg-salon-primary/90 text-white py-6 px-8 rounded-full text-lg"
