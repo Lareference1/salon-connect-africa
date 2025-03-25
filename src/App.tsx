@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { AuthProvider } from "./components/auth/AuthContext";
@@ -17,29 +17,38 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+// Layout component that wraps all our providers
+const AppLayout = () => (
+  <>
+    <Outlet />
+    <Toaster />
+    <Sonner />
+  </>
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <LanguageProvider>
+    <BrowserRouter>
       <ThemeProvider>
-        <AuthProvider>
-          <TooltipProvider>
-            <BrowserRouter>
-              <Toaster />
-              <Sonner />
+        <LanguageProvider>
+          <AuthProvider>
+            <TooltipProvider>
               <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/salons" element={<Salons />} />
-                <Route path="/braiders" element={<Braiders />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/settings" element={<UserSettings />} />
-                <Route path="*" element={<NotFound />} />
+                <Route element={<AppLayout />}>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/salons" element={<Salons />} />
+                  <Route path="/braiders" element={<Braiders />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/settings" element={<UserSettings />} />
+                  <Route path="*" element={<NotFound />} />
+                </Route>
               </Routes>
-            </BrowserRouter>
-          </TooltipProvider>
-        </AuthProvider>
+            </TooltipProvider>
+          </AuthProvider>
+        </LanguageProvider>
       </ThemeProvider>
-    </LanguageProvider>
+    </BrowserRouter>
   </QueryClientProvider>
 );
 
