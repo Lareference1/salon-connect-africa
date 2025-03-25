@@ -1,9 +1,9 @@
-
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Search, User, Loader2, LogOut, Settings } from "lucide-react";
+import { Search, User, Loader2, LogOut, Settings, Moon, Sun, Globe } from "lucide-react";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/components/auth/AuthContext';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface ActionButtonsProps {
   isLoading: boolean;
@@ -11,7 +11,8 @@ interface ActionButtonsProps {
 }
 
 const ActionButtons = ({ isLoading, onSignUp }: ActionButtonsProps) => {
-  const { t } = useLanguage();
+  const { t, language, toggleLanguage } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   
@@ -25,6 +26,32 @@ const ActionButtons = ({ isLoading, onSignUp }: ActionButtonsProps) => {
   
   return (
     <div className="hidden md:flex items-center space-x-3">
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="rounded-full p-2 relative"
+        onClick={toggleLanguage}
+        title={language === "fr" ? "Switch to English" : "Passer au français"}
+      >
+        <Globe className="h-5 w-5" />
+        <span className="absolute -top-1 -right-1 text-[10px] font-bold bg-salon-primary text-white rounded-full w-4 h-4 flex items-center justify-center">
+          {language === "fr" ? "EN" : "FR"}
+        </span>
+      </Button>
+      
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="rounded-full p-2"
+        onClick={toggleTheme}
+      >
+        {theme === "light" ? (
+          <Moon className="h-5 w-5" />
+        ) : (
+          <Sun className="h-5 w-5" />
+        )}
+      </Button>
+      
       <Button variant="ghost" size="icon" className="rounded-full p-2">
         <Search className="h-5 w-5" />
       </Button>
