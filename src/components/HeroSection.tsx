@@ -34,7 +34,7 @@ const HeroSection = () => {
           <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-8">
             {t('heroSubtitle')}
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <div className="flex flex-row justify-center gap-4">
             <Button 
               className="bg-salon-primary hover:bg-salon-primary/90 text-white py-6 px-8 rounded-full text-lg"
               onClick={() => handleButtonClick('salon')}
