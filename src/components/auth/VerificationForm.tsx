@@ -119,12 +119,13 @@ const VerificationForm = ({
               <FormItem className="space-y-3">
                 <FormLabel>{t("verificationCode") || "Verification Code"}</FormLabel>
                 <FormControl>
-                  <InputOTP 
+                  <InputOTP
                     maxLength={6}
-                    {...field}
+                    value={field.value}
+                    onChange={field.onChange}
                     render={({ slots }) => (
                       <InputOTPGroup>
-                        {slots.map((slot, index) => (
+                        {slots && slots.map((slot, index) => (
                           <InputOTPSlot key={index} {...slot} index={index} />
                         ))}
                       </InputOTPGroup>
