@@ -20,6 +20,12 @@ export const useProfileForm = (user: User | null, onSuccess?: (data: ProfileForm
       phone: '',
       preferredContact: 'email',
       userType: 'customer',
+      businessName: '',
+      location: '',
+      specialties: '',
+      hiringStatus: 'false',
+      experience: '',
+      businessDescription: '',
     },
   });
 
@@ -50,6 +56,14 @@ export const useProfileForm = (user: User | null, onSuccess?: (data: ProfileForm
           form.setValue('phone', data.phone || '');
           form.setValue('preferredContact', data.preferred_contact as 'email' | 'phone' || 'email');
           form.setValue('userType', data.user_type as 'salon' | 'braider' | 'customer' || 'customer');
+          
+          // Set business-related fields
+          form.setValue('businessName', data.business_name || '');
+          form.setValue('location', data.location || '');
+          form.setValue('specialties', data.specialties || '');
+          form.setValue('hiringStatus', data.hiring_status ? 'true' : 'false');
+          form.setValue('experience', data.experience || '');
+          form.setValue('businessDescription', data.business_description || '');
         }
       } catch (error) {
         console.error('Error fetching profile:', error);
@@ -71,6 +85,11 @@ export const useProfileForm = (user: User | null, onSuccess?: (data: ProfileForm
     
     setIsLoading(true);
     try {
+      // Convert specialties string to array if provided
+      const specialtiesArray = data.specialties 
+        ? data.specialties.split(',').map(s => s.trim()) 
+        : [];
+      
       // Update the profile in the database
       const { error } = await supabase
         .from('profiles')
@@ -81,6 +100,13 @@ export const useProfileForm = (user: User | null, onSuccess?: (data: ProfileForm
           phone: data.phone || null,
           preferred_contact: data.preferredContact,
           user_type: data.userType,
+          // Business-related fields
+          business_name: data.businessName || null,
+          location: data.location || null,
+          specialties: specialtiesArray.length > 0 ? specialtiesArray : null,
+          hiring_status: data.hiringStatus === 'true',
+          experience: data.experience || null,
+          business_description: data.businessDescription || null,
           updated_at: new Date().toISOString(), // Convert Date to ISO string
         });
       

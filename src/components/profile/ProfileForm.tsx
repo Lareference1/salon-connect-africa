@@ -6,14 +6,27 @@ import { useProfileForm } from '@/hooks/useProfileForm';
 import ProfileBasicInfo from './ProfileBasicInfo';
 import ProfileContactInfo from './ProfileContactInfo';
 import ProfileUserType from './ProfileUserType';
+import ProfileSalonBraiderInfo from './ProfileSalonBraiderInfo';
 import ProfileFormSubmit from './ProfileFormSubmit';
 import { ProfileFormValues } from '@/types/profile';
+import { useToast } from '@/components/ui/use-toast';
 
 const ProfileForm = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
   
   const handleSuccess = (data: ProfileFormValues) => {
+    // Display a success toast based on user type
+    const message = data.userType === 'customer' 
+      ? 'Your profile has been updated.'
+      : `Your ${data.userType} profile has been added to the platform.`;
+    
+    toast({
+      title: 'Profile Updated',
+      description: message,
+    });
+    
     // Redirect based on user type
     if (data.userType === 'salon') {
       navigate('/salons');
@@ -43,6 +56,7 @@ const ProfileForm = () => {
           <ProfileBasicInfo form={form} />
           <ProfileContactInfo form={form} />
           <ProfileUserType form={form} />
+          <ProfileSalonBraiderInfo form={form} />
           <ProfileFormSubmit isLoading={isLoading} />
         </form>
       </Form>
