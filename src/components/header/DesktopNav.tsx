@@ -33,7 +33,7 @@ const DesktopNav = () => {
             </NavigationMenuTrigger>
             <NavigationMenuContent className="bg-white/95 dark:bg-salon-dark/95 backdrop-blur-sm p-3 rounded-md min-w-[200px]">
               <div className="grid gap-2">
-                <Link to="/salons" className="block p-2 hover:bg-muted rounded-md transition-colors">
+                <Link to="/salons">
                   {t('allSalons')}
                 </Link>
                 <Link to="/salons?featured=true" className="block p-2 hover:bg-muted rounded-md transition-colors">
