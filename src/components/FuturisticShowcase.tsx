@@ -135,7 +135,7 @@ const FuturisticShowcase = () => {
                   <FuturisticButton variant="frost">Frost</FuturisticButton>
                   <FuturisticButton variant="neo-glass">Neo Glass</FuturisticButton>
                   <FuturisticButton variant="glow">Glow Effect</FuturisticButton>
-                  <FuturisticButton variant="primary" animation="shine">Shine Effect</FuturisticButton>
+                  <FuturisticButton variant="default" animation="shine">Shine Effect</FuturisticButton>
                 </div>
               </div>
             </div>
