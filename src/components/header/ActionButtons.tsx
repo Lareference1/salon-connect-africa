@@ -58,6 +58,7 @@ const ActionButtons = ({ isLoading, onSignUp }: ActionButtonsProps) => {
         size="icon"
         className="rounded-full p-2"
         onClick={() => navigate(user ? '/settings' : '/auth')}
+        title={user ? t('settings') : t('login')}
       >
         {user ? <Settings className="h-5 w-5" /> : <User className="h-5 w-5" />}
       </Button>
