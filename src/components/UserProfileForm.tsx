@@ -91,6 +91,7 @@ const UserProfileForm = () => {
     setIsLoading(true);
     try {
       // Update the profile in the database
+      // Convert Date to ISO string for updated_at
       const { error } = await supabase
         .from('profiles')
         .upsert({
@@ -100,7 +101,7 @@ const UserProfileForm = () => {
           phone: data.phone || null,
           preferred_contact: data.preferredContact,
           user_type: data.userType,
-          updated_at: new Date(),
+          updated_at: new Date().toISOString(),
         });
       
       if (error) throw error;
