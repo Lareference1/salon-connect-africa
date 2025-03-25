@@ -58,8 +58,7 @@ export const useProfileForm = (user: User | null, onSuccess?: (data: ProfileForm
           form.setValue('preferredContact', data.preferred_contact as 'email' | 'phone' || 'email');
           form.setValue('userType', data.user_type as 'salon' | 'braider' | 'customer' || 'customer');
           
-          // Set business-related fields if they exist
-          // Note: These fields might not exist in older database schemas
+          // Set business-related fields
           form.setValue('businessName', data.business_name || '');
           form.setValue('location', data.location || '');
           form.setValue('specialties', Array.isArray(data.specialties) ? data.specialties.join(', ') : (data.specialties || ''));
@@ -109,7 +108,7 @@ export const useProfileForm = (user: User | null, onSuccess?: (data: ProfileForm
           hiring_status: data.hiringStatus === 'true',
           experience: data.experience || null,
           business_description: data.businessDescription || null,
-          updated_at: new Date().toISOString(), // Convert Date to ISO string
+          updated_at: new Date().toISOString(),
         });
       
       if (error) throw error;
