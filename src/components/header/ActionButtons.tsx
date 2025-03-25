@@ -1,5 +1,5 @@
 
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { User, Loader2, LogOut, Settings, Moon, Sun, Globe } from "lucide-react";
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -62,35 +62,29 @@ const ActionButtons = ({ isLoading, onSignUp }: ActionButtonsProps) => {
         {user ? <Settings className="h-5 w-5" /> : <User className="h-5 w-5" />}
       </Button>
       
-      <Button 
-        className="bg-gradient-to-r from-salon-primary to-salon-primary/90 hover:from-salon-primary/80 hover:to-salon-primary hover:scale-105 shadow-md hover:shadow-lg active:scale-95 transition-all duration-300 border-0 rounded-full text-sm"
-        onClick={handleAuthAction}
-        disabled={isLoading}
-      >
-        {isLoading ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin mr-2" />
-            {user ? t('logout') : t('signUp')}...
-          </>
-        ) : (
-          <>
-            {user ? (
-              <>
-                <LogOut className="h-4 w-4 mr-2" />
-                {t('logout')}
-              </>
-            ) : (
-              t('signUp')
-            )}
-          </>
-        )}
-      </Button>
-      
-      {!user && (
+      {user ? (
+        <Button 
+          className="bg-gradient-to-r from-salon-primary to-salon-primary/90 hover:from-salon-primary/80 hover:to-salon-primary hover:scale-105 shadow-md hover:shadow-lg active:scale-95 transition-all duration-300 border-0 rounded-full text-sm"
+          onClick={handleAuthAction}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              {t('logout')}...
+            </>
+          ) : (
+            <>
+              <LogOut className="h-4 w-4 mr-2" />
+              {t('logout')}
+            </>
+          )}
+        </Button>
+      ) : (
         <Button 
           variant="outline" 
           className="rounded-full text-sm"
-          onClick={() => navigate('/auth')}
+          onClick={() => navigate('/auth?tab=signup')}
         >
           {t('login')}
         </Button>

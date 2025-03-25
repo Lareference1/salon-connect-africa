@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -13,8 +13,19 @@ import { useToast } from "@/hooks/use-toast";
 const Auth = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("signin");
+
+  // Check for tab parameter in URL
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const tabParam = queryParams.get("tab");
+    if (tabParam === "signup") {
+      setActiveTab("signup");
+    }
+  }, [location]);
 
   const onAuthSuccess = () => {
     setIsLoading(false);
@@ -48,7 +59,7 @@ const Auth = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="signin" className="w-full">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid w-full grid-cols-2 mb-6">
                 <TabsTrigger value="signin">{t("login")}</TabsTrigger>
                 <TabsTrigger value="signup">{t("signUp")}</TabsTrigger>
