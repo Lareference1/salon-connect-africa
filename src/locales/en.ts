@@ -1,4 +1,3 @@
-
 export const en = {
   // Header
   home: "Home",
@@ -10,6 +9,7 @@ export const en = {
   signUp: "Sign Up",
   login: "Login",
   logout: "Logout",
+  settings: "Settings", // Added the missing key
   
   // Hero Section
   heroTitle: "Connecting African salons with the best braiders",
@@ -152,4 +152,3 @@ export const en = {
   unsupportedProvider: "Unsupported Provider",
   providerNotConfigured: "{{provider}} login is not configured. Please try another method."
 };
-

@@ -1,4 +1,3 @@
-
 export const fr = {
   // Header
   home: "Accueil",
@@ -10,6 +9,7 @@ export const fr = {
   signUp: "S'inscrire",
   login: "Connexion",
   logout: "Déconnexion",
+  settings: "Paramètres", // Added the missing key
   
   // Hero Section
   heroTitle: "Connecter les salons africains aux meilleures tresseuses",
@@ -152,4 +152,3 @@ export const fr = {
   unsupportedProvider: "Fournisseur non pris en charge",
   providerNotConfigured: "La connexion {{provider}} n'est pas configurée. Veuillez essayer une autre méthode."
 };
-
