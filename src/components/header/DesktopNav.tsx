@@ -32,18 +32,14 @@ const DesktopNav = () => {
               {t('salons')}
             </NavigationMenuTrigger>
             <NavigationMenuContent className="bg-white/95 dark:bg-salon-dark/95 backdrop-blur-sm p-3 rounded-md min-w-[200px]">
-              <ul className="grid gap-2">
-                <li>
-                  <Link to="/salons" className="block p-2 hover:bg-muted rounded-md transition-colors">
-                    {t('allSalons')}
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/salons?featured=true" className="block p-2 hover:bg-muted rounded-md transition-colors">
-                    {t('featuredSalons')}
-                  </Link>
-                </li>
-              </ul>
+              <div className="grid gap-2">
+                <Link to="/salons" className="block p-2 hover:bg-muted rounded-md transition-colors">
+                  {t('allSalons')}
+                </Link>
+                <Link to="/salons?featured=true" className="block p-2 hover:bg-muted rounded-md transition-colors">
+                  {t('featuredSalons')}
+                </Link>
+              </div>
             </NavigationMenuContent>
           </NavigationMenuItem>
           
