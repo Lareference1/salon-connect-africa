@@ -1,3 +1,4 @@
+
 export const fr = {
   // Header
   home: "Accueil",
@@ -158,4 +159,8 @@ export const fr = {
   
   // Navigation
   back: "Retour",
+  
+  // Authentication required messages
+  authRequired: "Authentification requise",
+  pleaseLoginFirst: "Veuillez vous connecter d'abord pour accéder à cette fonctionnalité",
 };
