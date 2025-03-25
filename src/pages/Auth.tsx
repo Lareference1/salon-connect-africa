@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -65,7 +64,7 @@ const Auth = () => {
           <Button 
             variant="ghost" 
             onClick={() => navigate(-1)} 
-            className="mb-4 flex items-center text-muted-foreground hover:text-foreground"
+            className=""
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             {t("backToHome")}
