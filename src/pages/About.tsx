@@ -3,8 +3,11 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from "@/components/ui/button";
 import { MapPin, Users, Award, Phone } from 'lucide-react';
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const About = () => {
+  const { t } = useLanguage();
+  
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -12,9 +15,9 @@ const About = () => {
         {/* Hero Section */}
         <section className="bg-salon-primary py-20">
           <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-display text-white mb-6">Notre mission</h1>
+            <h1 className="text-4xl md:text-5xl font-display text-white mb-6">{t('ourMission')}</h1>
             <p className="text-xl text-white/90 max-w-3xl mx-auto">
-              Faciliter la connexion entre les salons de coiffure africains et les tresseuses talentueuses pour créer un écosystème de beauté florissant.
+              {t('missionDescription')}
             </p>
           </div>
         </section>
@@ -23,7 +26,7 @@ const About = () => {
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
-              <h2 className="text-3xl font-display mb-6 text-center">Notre histoire</h2>
+              <h2 className="text-3xl font-display mb-6 text-center">{t('ourStory')}</h2>
               <div className="prose lg:prose-xl max-w-none">
                 <p>
                   SalonConnect Africa est née d'une observation simple mais révélatrice : les salons de coiffure africains aux États-Unis font face à un défi constant pour trouver des tresseuses qualifiées, tandis que de nombreuses tresseuses talentueuses peinent à trouver des opportunités professionnelles stables.
@@ -45,16 +48,16 @@ const About = () => {
         {/* Values Section */}
         <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-display mb-12 text-center">Nos valeurs</h2>
+            <h2 className="text-3xl font-display mb-12 text-center">{t('ourValues')}</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="bg-white p-8 rounded-lg shadow-md flex flex-col items-center text-center">
                 <div className="w-16 h-16 rounded-full bg-salon-primary/10 flex items-center justify-center mb-6">
                   <Users className="h-8 w-8 text-salon-primary" />
                 </div>
-                <h3 className="text-xl font-semibold mb-4">Communauté</h3>
+                <h3 className="text-xl font-semibold mb-4">{t('community')}</h3>
                 <p className="text-gray-600">
-                  Nous cultivons un espace où les professionnels peuvent partager leurs connaissances, s'entraider et grandir ensemble dans un esprit de solidarité.
+                  {t('communityDesc')}
                 </p>
               </div>
               
@@ -62,9 +65,9 @@ const About = () => {
                 <div className="w-16 h-16 rounded-full bg-salon-accent1/10 flex items-center justify-center mb-6">
                   <Award className="h-8 w-8 text-salon-accent1" />
                 </div>
-                <h3 className="text-xl font-semibold mb-4">Excellence</h3>
+                <h3 className="text-xl font-semibold mb-4">{t('excellence')}</h3>
                 <p className="text-gray-600">
-                  Nous encourageons et mettons en avant le professionnalisme et l'expertise, car nous croyons que la qualité mérite d'être reconnue et valorisée.
+                  {t('excellenceDesc')}
                 </p>
               </div>
               
@@ -72,9 +75,9 @@ const About = () => {
                 <div className="w-16 h-16 rounded-full bg-salon-accent2/10 flex items-center justify-center mb-6">
                   <MapPin className="h-8 w-8 text-salon-accent2" />
                 </div>
-                <h3 className="text-xl font-semibold mb-4">Authenticité</h3>
+                <h3 className="text-xl font-semibold mb-4">{t('authenticity')}</h3>
                 <p className="text-gray-600">
-                  Nous célébrons et préservons l'héritage des coiffures africaines traditionnelles tout en embrassant l'innovation et la créativité moderne.
+                  {t('authenticityDesc')}
                 </p>
               </div>
             </div>
@@ -84,7 +87,7 @@ const About = () => {
         {/* Team Section */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-display mb-12 text-center">Notre équipe</h2>
+            <h2 className="text-3xl font-display mb-12 text-center">{t('ourTeam')}</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center">
@@ -96,7 +99,7 @@ const About = () => {
                 <h3 className="text-xl font-semibold mb-1">Marie Diop</h3>
                 <p className="text-salon-primary mb-2">Fondatrice & CEO</p>
                 <p className="text-gray-600 text-sm">
-                  Ancienne propriétaire de salon avec 15 ans d'expérience dans l'industrie de la beauté.
+                  {t('founderDesc')}
                 </p>
               </div>
               
@@ -109,7 +112,7 @@ const About = () => {
                 <h3 className="text-xl font-semibold mb-1">David Johnson</h3>
                 <p className="text-salon-primary mb-2">CTO</p>
                 <p className="text-gray-600 text-sm">
-                  Expert en technologie avec une passion pour créer des solutions qui font la différence.
+                  {t('techDesc')}
                 </p>
               </div>
               
@@ -122,7 +125,7 @@ const About = () => {
                 <h3 className="text-xl font-semibold mb-1">Aminata Touré</h3>
                 <p className="text-salon-primary mb-2">Directrice des Opérations</p>
                 <p className="text-gray-600 text-sm">
-                  Spécialiste en relations professionnelles avec un réseau étendu dans le secteur de la beauté.
+                  {t('operationsDesc')}
                 </p>
               </div>
             </div>
@@ -133,9 +136,9 @@ const About = () => {
         <section className="py-16 bg-salon-dark text-white">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-3xl font-display mb-6">Contactez-nous</h2>
+              <h2 className="text-3xl font-display mb-6">{t('contactUs')}</h2>
               <p className="text-xl text-white/80 mb-8">
-                Des questions? Notre équipe est là pour vous aider.
+                {t('contactDesc')}
               </p>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
@@ -143,7 +146,7 @@ const About = () => {
                   <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mb-4">
                     <Phone className="h-6 w-6" />
                   </div>
-                  <h3 className="text-lg font-medium mb-2">Téléphone</h3>
+                  <h3 className="text-lg font-medium mb-2">{t('phone')}</h3>
                   <p className="text-white/80">+1 (234) 567-8901</p>
                 </div>
                 
@@ -153,7 +156,7 @@ const About = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-medium mb-2">Email</h3>
+                  <h3 className="text-lg font-medium mb-2">{t('email')}</h3>
                   <p className="text-white/80">info@salonconnect.africa</p>
                 </div>
                 
@@ -161,13 +164,13 @@ const About = () => {
                   <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mb-4">
                     <MapPin className="h-6 w-6" />
                   </div>
-                  <h3 className="text-lg font-medium mb-2">Adresse</h3>
+                  <h3 className="text-lg font-medium mb-2">{t('address')}</h3>
                   <p className="text-white/80">New York, NY 10001</p>
                 </div>
               </div>
               
               <Button className="bg-salon-primary hover:bg-salon-primary/90 py-6 px-10 rounded-full text-lg">
-                Envoyez-nous un message
+                {t('sendMessage')}
               </Button>
             </div>
           </div>

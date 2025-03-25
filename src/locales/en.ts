@@ -1,4 +1,3 @@
-
 export const en = {
   // Header
   home: "Home",
@@ -78,5 +77,27 @@ export const en = {
   available: "Available",
   booked: "Booked",
   experience: "Experience:",
-  years: "years"
+  years: "years",
+
+  // About page
+  ourMission: "Our mission",
+  missionDescription: "Facilitate the connection between African hair salons and talented braiders to create a flourishing beauty ecosystem.",
+  ourStory: "Our story",
+  ourValues: "Our values",
+  community: "Community",
+  communityDesc: "We cultivate a space where professionals can share knowledge, help each other, and grow together in a spirit of solidarity.",
+  excellence: "Excellence",
+  excellenceDesc: "We encourage and highlight professionalism and expertise, because we believe that quality deserves to be recognized and valued.",
+  authenticity: "Authenticity",
+  authenticityDesc: "We celebrate and preserve the heritage of traditional African hairstyles while embracing modern innovation and creativity.",
+  ourTeam: "Our team",
+  founderDesc: "Former salon owner with 15 years of experience in the beauty industry.",
+  techDesc: "Technology expert with a passion for creating solutions that make a difference.",
+  operationsDesc: "Professional relations specialist with an extensive network in the beauty sector.",
+  contactUs: "Contact us",
+  contactDesc: "Questions? Our team is here to help you.",
+  phone: "Phone",
+  email: "Email",
+  address: "Address",
+  sendMessage: "Send us a message"
 };

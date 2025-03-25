@@ -43,9 +43,9 @@ const Braiders = () => {
       <main className="flex-grow bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto px-4 py-12">
           <div className="max-w-4xl mx-auto text-center mb-12">
-            <h1 className="text-4xl font-display mb-4 dark:text-white">Trouvez des tresseuses talentueuses</h1>
+            <h1 className="text-4xl font-display mb-4 dark:text-white">{t('discoverBraiders')}</h1>
             <p className="text-lg text-gray-600 dark:text-gray-300">
-              Découvrez les meilleures tresseuses africaines disponibles pour travailler avec votre salon.
+              {t('findBestBraiders')}
             </p>
           </div>
           

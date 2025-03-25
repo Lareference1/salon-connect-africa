@@ -1,4 +1,3 @@
-
 export const fr = {
   // Header
   home: "Accueil",
@@ -78,5 +77,27 @@ export const fr = {
   available: "Disponible",
   booked: "Réservée",
   experience: "Expérience:",
-  years: "ans"
+  years: "ans",
+  
+  // About page
+  ourMission: "Notre mission",
+  missionDescription: "Faciliter la connexion entre les salons de coiffure africains et les tresseuses talentueuses pour créer un écosystème de beauté florissant.",
+  ourStory: "Notre histoire",
+  ourValues: "Nos valeurs",
+  community: "Communauté",
+  communityDesc: "Nous cultivons un espace où les professionnels peuvent partager leurs connaissances, s'entraider et grandir ensemble dans un esprit de solidarité.",
+  excellence: "Excellence",
+  excellenceDesc: "Nous encourageons et mettons en avant le professionnalisme et l'expertise, car nous croyons que la qualité mérite d'être reconnue et valorisée.",
+  authenticity: "Authenticité",
+  authenticityDesc: "Nous célébrons et préservons l'héritage des coiffures africaines traditionnelles tout en embrassant l'innovation et la créativité moderne.",
+  ourTeam: "Notre équipe",
+  founderDesc: "Ancienne propriétaire de salon avec 15 ans d'expérience dans l'industrie de la beauté.",
+  techDesc: "Expert en technologie avec une passion pour créer des solutions qui font la différence.",
+  operationsDesc: "Spécialiste en relations professionnelles avec un réseau étendu dans le secteur de la beauté.",
+  contactUs: "Contactez-nous",
+  contactDesc: "Des questions? Notre équipe est là pour vous aider.",
+  phone: "Téléphone",
+  email: "Email",
+  address: "Adresse",
+  sendMessage: "Envoyez-nous un message"
 };
