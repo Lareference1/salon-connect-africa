@@ -1,8 +1,11 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/components/auth/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 import SearchForm from '@/components/salons/SearchForm';
 import SalonCard from '@/components/salons/SalonCard';
 import NoResults from '@/components/salons/NoResults';
@@ -10,10 +13,29 @@ import { salonsData } from '@/data/salonsData';
 
 const Salons = () => {
   const { t } = useLanguage();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [location, setLocation] = useState("");
   const [specialty, setSpecialty] = useState("");
   const [hiringOnly, setHiringOnly] = useState(false);
   const [filteredSalons, setFilteredSalons] = useState(salonsData);
+  
+  // Check if user is authenticated
+  useEffect(() => {
+    if (!user) {
+      toast({
+        title: t('authRequired'),
+        description: t('pleaseLoginFirst'),
+      });
+      navigate('/auth');
+    }
+  }, [user, navigate, toast, t]);
+
+  // If user is not authenticated, don't render the rest of the component
+  if (!user) {
+    return null;
+  }
   
   const handleSearch = () => {
     let results = salonsData;

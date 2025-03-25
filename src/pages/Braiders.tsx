@@ -1,22 +1,42 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/components/auth/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 import SearchForm from '@/components/braiders/SearchForm';
 import BraiderCard from '@/components/braiders/BraiderCard';
 import NoResults from '@/components/braiders/NoResults';
 import { braidersData, BraiderData } from '@/data/braidersData';
-import { useToast } from '@/hooks/use-toast';
 
 const Braiders = () => {
   const { t } = useLanguage();
   const { toast } = useToast();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [location, setLocation] = useState("");
   const [specialty, setSpecialty] = useState("");
   const [availability, setAvailability] = useState("");
   const [braidersState, setBraidersState] = useState(braidersData || []);
   const [filteredBraiders, setFilteredBraiders] = useState(braidersData || []);
+  
+  // Check if user is authenticated
+  useEffect(() => {
+    if (!user) {
+      toast({
+        title: t('authRequired'),
+        description: t('pleaseLoginFirst'),
+      });
+      navigate('/auth');
+    }
+  }, [user, navigate, toast, t]);
+
+  // If user is not authenticated, don't render the rest of the component
+  if (!user) {
+    return null;
+  }
   
   const handleSearch = () => {
     let results = braidersState;

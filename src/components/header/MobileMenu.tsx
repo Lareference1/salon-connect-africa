@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown, Search, User, Loader2, LogOut } from "lucide-react";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/components/auth/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
 interface MobileMenuProps {
@@ -19,6 +20,7 @@ const MobileMenu = ({ isOpen, onClose, isLoading, onSignUp }: MobileMenuProps) =
   const location = useLocation();
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   if (!isOpen) return null;
 
@@ -29,6 +31,20 @@ const MobileMenu = ({ isOpen, onClose, isLoading, onSignUp }: MobileMenuProps) =
       navigate('/auth');
       onClose();
     }
+  };
+
+  const handleProtectedNavigation = (path: string) => {
+    if (!user) {
+      toast({
+        title: t('authRequired'),
+        description: t('pleaseLoginFirst'),
+      });
+      navigate('/auth');
+      onClose();
+      return;
+    }
+    navigate(path);
+    onClose();
   };
 
   return (
@@ -55,33 +71,31 @@ const MobileMenu = ({ isOpen, onClose, isLoading, onSignUp }: MobileMenuProps) =
             <ChevronDown className="h-4 w-4" />
           </div>
           <div id="salons-submenu" className="hidden pl-4 space-y-2 py-2">
-            <Link 
-              to="/salons" 
+            <button 
               className="block py-2 text-salon-dark dark:text-white hover:text-salon-primary transition-colors"
-              onClick={onClose}
+              onClick={() => handleProtectedNavigation('/salons')}
             >
               {t('allSalons')}
-            </Link>
-            <Link 
-              to="/salons?featured=true" 
+            </button>
+            <button 
               className="block py-2 text-salon-dark dark:text-white hover:text-salon-primary transition-colors"
-              onClick={onClose}
+              onClick={() => handleProtectedNavigation('/salons?featured=true')}
             >
               {t('featuredSalons')}
-            </Link>
+            </button>
           </div>
         </div>
         
-        <Link 
-          to="/braiders" 
+        <button 
           className={cn(
-            "text-salon-dark dark:text-white hover:text-salon-primary transition-colors py-3 px-3 rounded-md",
+            "text-left text-salon-dark dark:text-white hover:text-salon-primary transition-colors py-3 px-3 rounded-md",
             location.pathname === "/braiders" && "bg-muted dark:bg-muted text-salon-primary"
           )}
-          onClick={onClose}
+          onClick={() => handleProtectedNavigation('/braiders')}
         >
           {t('braiders')}
-        </Link>
+        </button>
+        
         <Link 
           to="/about" 
           className={cn(
@@ -102,7 +116,7 @@ const MobileMenu = ({ isOpen, onClose, isLoading, onSignUp }: MobileMenuProps) =
             size="icon" 
             className="rounded-full p-2"
             onClick={() => {
-              navigate(user ? '/profile' : '/auth');
+              navigate(user ? '/settings' : '/auth');
               onClose();
             }}
           >

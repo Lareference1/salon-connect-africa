@@ -1,6 +1,8 @@
 
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/components/auth/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import {
   NavigationMenu,
@@ -13,6 +15,21 @@ import {
 const DesktopNav = () => {
   const { t } = useLanguage();
   const location = useLocation();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleProtectedNavigation = (path: string) => {
+    if (!user) {
+      toast({
+        title: t('authRequired'),
+        description: t('pleaseLoginFirst'),
+      });
+      navigate('/auth');
+      return;
+    }
+    navigate(path);
+  };
 
   return (
     <nav className="hidden md:flex items-center space-x-6">
@@ -34,26 +51,32 @@ const DesktopNav = () => {
             <NavigationMenuContent className="bg-white/95 dark:bg-salon-dark/95 backdrop-blur-sm p-3 rounded-md min-w-[200px]">
               <ul className="grid gap-2">
                 <li>
-                  <Link to="/salons" className="block p-2 hover:bg-muted rounded-md transition-colors">
+                  <button 
+                    onClick={() => handleProtectedNavigation('/salons')}
+                    className="w-full text-left block p-2 hover:bg-muted rounded-md transition-colors">
                     {t('allSalons')}
-                  </Link>
+                  </button>
                 </li>
                 <li>
-                  <Link to="/salons?featured=true" className="block p-2 hover:bg-muted rounded-md transition-colors">
+                  <button 
+                    onClick={() => handleProtectedNavigation('/salons?featured=true')}
+                    className="w-full text-left block p-2 hover:bg-muted rounded-md transition-colors">
                     {t('featuredSalons')}
-                  </Link>
+                  </button>
                 </li>
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
           
           <NavigationMenuItem>
-            <Link to="/braiders" className={cn(
-              "text-salon-dark dark:text-white hover:text-salon-primary transition-colors px-3 py-2",
-              location.pathname === "/braiders" && "text-salon-primary font-medium"
-            )}>
+            <button 
+              onClick={() => handleProtectedNavigation('/braiders')}
+              className={cn(
+                "text-salon-dark dark:text-white hover:text-salon-primary transition-colors px-3 py-2",
+                location.pathname === "/braiders" && "text-salon-primary font-medium"
+              )}>
               {t('braiders')}
-            </Link>
+            </button>
           </NavigationMenuItem>
           
           <NavigationMenuItem>
