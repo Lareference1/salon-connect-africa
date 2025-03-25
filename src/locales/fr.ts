@@ -5,6 +5,8 @@ export const fr = {
   salons: "Salons",
   braiders: "Tresseuses",
   about: "À propos",
+  signUp: "S'inscrire",
+  login: "Connexion",
   
   // Hero Section
   heroTitle: "Connecter les salons africains aux meilleures tresseuses",
@@ -64,19 +66,5 @@ export const fr = {
   specialties: "Spécialités:",
   hiring: "Recrute",
   noSalonFound: "Aucun salon trouvé",
-  tryOtherCriteria: "Veuillez essayer d'autres critères de recherche.",
-
-  // Auth translations
-  login: "Connexion",
-  signUp: "S'inscrire",
-  email: "Email",
-  password: "Mot de passe",
-  confirmPassword: "Confirmer le mot de passe",
-  loggingIn: "Connexion en cours...",
-  createAccount: "Créer un compte",
-  creatingAccount: "Création du compte...",
-  enterYourCredentials: "Entrez vos identifiants pour vous connecter",
-  passwordsDoNotMatch: "Les mots de passe ne correspondent pas",
-  noAccount: "Pas encore de compte ?",
-  alreadyHaveAccount: "Vous avez déjà un compte ?"
-} as const;
+  tryOtherCriteria: "Veuillez essayer d'autres critères de recherche."
+};
