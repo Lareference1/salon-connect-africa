@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MapPin, Star, Edit } from 'lucide-react';
+import { MapPin, Star } from 'lucide-react';
 import { BraiderData } from '@/data/braidersData';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
@@ -43,20 +43,7 @@ const BraiderCard = ({ braider, onUpdate }: BraiderCardProps) => {
         </div>
         <CardContent className="p-6">
           <div className="flex justify-between items-center mb-2">
-            <div className="flex items-center gap-2">
-              <h3 className="text-xl font-semibold">{braider.name}</h3>
-              {onUpdate && (
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="bg-salon-primary text-white border-none hover:bg-salon-primary/90"
-                  onClick={() => setIsEditing(true)}
-                >
-                  <Edit className="h-4 w-4 mr-1" />
-                  Modifier
-                </Button>
-              )}
-            </div>
+            <h3 className="text-xl font-semibold">{braider.name}</h3>
           </div>
           
           <div className="flex items-center text-gray-500 mb-2">
