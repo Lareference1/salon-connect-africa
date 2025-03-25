@@ -28,7 +28,7 @@ const DesktopNav = () => {
           </NavigationMenuItem>
           
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="bg-transparent hover:bg-transparent hover:text-salon-primary focus:bg-transparent data-[state=open]:bg-transparent text-salon-dark dark:text-white">
+            <NavigationMenuTrigger>
               {t('salons')}
             </NavigationMenuTrigger>
             <NavigationMenuContent>
