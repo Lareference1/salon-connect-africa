@@ -97,37 +97,16 @@ export default {
 				'float': {
 					'0%, 100%': { transform: 'translateY(0)' },
 					'50%': { transform: 'translateY(-10px)' }
-				},
-				'shimmer': {
-					'0%': { backgroundPosition: '-200% 0' },
-					'100%': { backgroundPosition: '200% 0' },
-				},
-				'pulse-subtle': {
-					'0%, 100%': { opacity: 1 },
-					'50%': { opacity: 0.8 },
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'float': 'float 3s ease-in-out infinite',
-				'shimmer': 'shimmer 3s linear infinite',
-				'pulse-subtle': 'pulse-subtle 2s ease-in-out infinite',
+				'float': 'float 3s ease-in-out infinite'
 			},
 			fontFamily: {
-				sans: ['Inter', 'Poppins', 'sans-serif'],
+				sans: ['Poppins', 'sans-serif'],
 				display: ['DM Serif Display', 'serif']
-			},
-			backgroundImage: {
-				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-				'gradient-mirror': 'linear-gradient(to bottom, rgba(255,255,255,0.12), rgba(255,255,255,0.03))',
-				'gradient-glass': 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))',
-			},
-			boxShadow: {
-				'neu-light': '5px 5px 10px #d9d9d9, -5px -5px 10px #ffffff',
-				'neu-dark': '5px 5px 10px #151515, -5px -5px 10px #1f1f1f',
-				'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
-				'mirror': '0 4px 30px rgba(0, 0, 0, 0.1)',
 			}
 		}
 	},
