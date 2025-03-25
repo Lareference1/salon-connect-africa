@@ -1,6 +1,7 @@
+
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Search, User, Loader2, LogOut, Settings, Moon, Sun, Globe } from "lucide-react";
+import { User, Loader2, LogOut, Settings, Moon, Sun, Globe } from "lucide-react";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/components/auth/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -50,10 +51,6 @@ const ActionButtons = ({ isLoading, onSignUp }: ActionButtonsProps) => {
         ) : (
           <Sun className="h-5 w-5" />
         )}
-      </Button>
-      
-      <Button variant="ghost" size="icon" className="rounded-full p-2">
-        <Search className="h-5 w-5" />
       </Button>
       
       <Button
