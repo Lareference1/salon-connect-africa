@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/auth/AuthContext';
@@ -22,17 +21,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-
-const profileSchema = z.object({
-  fullName: z.string().min(2, 'Full name must be at least 2 characters'),
-  bio: z.string().max(300, 'Bio must be less than 300 characters'),
-  email: z.string().email('Invalid email address'),
-  phone: z.string().optional(),
-  preferredContact: z.enum(['email', 'phone']),
-  userType: z.enum(['salon', 'braider', 'customer']).default('customer'),
-});
-
-type ProfileFormValues = z.infer<typeof profileSchema>;
+import { Label } from '@/components/ui/label';
+import { profileSchema, ProfileFormValues } from '@/types/profile';
 
 const UserProfileForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -58,24 +48,28 @@ const UserProfileForm = () => {
       
       setIsLoading(true);
       try {
-        // In a real app, we would fetch the profile from the database
-        // For now, we'll just use the user's email
+        // Set the user email
         form.setValue('email', user.email || '');
         
-        // Here you would typically fetch additional user profile data from your database
-        // const { data, error } = await supabase
-        //   .from('profiles')
-        //   .select('*')
-        //   .eq('id', user.id)
-        //   .single();
+        // Fetch the user profile from the database
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
         
-        // if (data) {
-        //   form.setValue('fullName', data.full_name);
-        //   form.setValue('bio', data.bio);
-        //   form.setValue('phone', data.phone);
-        //   form.setValue('preferredContact', data.preferred_contact);
-        //   form.setValue('userType', data.user_type);
-        // }
+        if (error && error.code !== 'PGRST116') {
+          // PGRST116 is "no rows returned" - that's expected for new users
+          throw error;
+        }
+        
+        if (data) {
+          form.setValue('fullName', data.full_name || '');
+          form.setValue('bio', data.bio || '');
+          form.setValue('phone', data.phone || '');
+          form.setValue('preferredContact', data.preferred_contact as 'email' | 'phone' || 'email');
+          form.setValue('userType', data.user_type as 'salon' | 'braider' | 'customer' || 'customer');
+        }
       } catch (error) {
         console.error('Error fetching profile:', error);
         toast({
@@ -96,20 +90,20 @@ const UserProfileForm = () => {
     
     setIsLoading(true);
     try {
-      // Here you would typically update the profile in your database
-      // const { error } = await supabase
-      //   .from('profiles')
-      //   .upsert({
-      //     id: user.id,
-      //     full_name: data.fullName,
-      //     bio: data.bio,
-      //     phone: data.phone,
-      //     preferred_contact: data.preferredContact,
-      //     user_type: data.userType,
-      //     updated_at: new Date(),
-      //   });
+      // Update the profile in the database
+      const { error } = await supabase
+        .from('profiles')
+        .upsert({
+          id: user.id,
+          full_name: data.fullName,
+          bio: data.bio,
+          phone: data.phone || null,
+          preferred_contact: data.preferredContact,
+          user_type: data.userType,
+          updated_at: new Date(),
+        });
       
-      // if (error) throw error;
+      if (error) throw error;
       
       toast({
         title: 'Profile Updated',
