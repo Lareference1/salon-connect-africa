@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -150,6 +151,7 @@ const UserProfileForm = () => {
       //     phone: data.phone,
       //     preferred_contact: data.preferredContact,
       //     user_type: data.userType,
+      //     image: profileImage, // Include profile image in update
       //     updated_at: new Date(),
       //   });
       
@@ -274,6 +276,35 @@ const UserProfileForm = () => {
             <CardContent className="pt-6">
               <Form {...profileForm}>
                 <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-6">
+                  {/* Profile Photo Section */}
+                  <div className="space-y-2">
+                    <FormLabel>Profile Photo</FormLabel>
+                    <div className="flex items-center space-x-4">
+                      <div className="h-24 w-24 rounded-full overflow-hidden bg-gray-100">
+                        <img 
+                          src={profileImage || '/placeholder.svg'} 
+                          alt="Profile" 
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <Label htmlFor="profileImageUpload" className="cursor-pointer">
+                          <div className="flex items-center border border-input rounded-md p-2 hover:bg-accent">
+                            <Upload className="h-4 w-4 mr-2" />
+                            <span>Upload photo</span>
+                          </div>
+                          <input 
+                            type="file" 
+                            id="profileImageUpload" 
+                            accept="image/*" 
+                            className="hidden" 
+                            onChange={handleImageChange}
+                          />
+                        </Label>
+                      </div>
+                    </div>
+                  </div>
+                  
                   <FormField
                     control={profileForm.control}
                     name="fullName"
