@@ -9,57 +9,7 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      profiles: {
-        Row: {
-          bio: string | null
-          business_description: string | null
-          business_name: string | null
-          created_at: string | null
-          experience: string | null
-          full_name: string | null
-          hiring_status: boolean | null
-          id: string
-          location: string | null
-          phone: string | null
-          preferred_contact: string | null
-          specialties: string[] | null
-          updated_at: string | null
-          user_type: string | null
-        }
-        Insert: {
-          bio?: string | null
-          business_description?: string | null
-          business_name?: string | null
-          created_at?: string | null
-          experience?: string | null
-          full_name?: string | null
-          hiring_status?: boolean | null
-          id: string
-          location?: string | null
-          phone?: string | null
-          preferred_contact?: string | null
-          specialties?: string[] | null
-          updated_at?: string | null
-          user_type?: string | null
-        }
-        Update: {
-          bio?: string | null
-          business_description?: string | null
-          business_name?: string | null
-          created_at?: string | null
-          experience?: string | null
-          full_name?: string | null
-          hiring_status?: boolean | null
-          id?: string
-          location?: string | null
-          phone?: string | null
-          preferred_contact?: string | null
-          specialties?: string[] | null
-          updated_at?: string | null
-          user_type?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
