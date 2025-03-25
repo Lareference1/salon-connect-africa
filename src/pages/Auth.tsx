@@ -10,7 +10,6 @@ import SignInForm from "@/components/auth/SignInForm";
 import SignUpForm from "@/components/auth/SignUpForm";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Auth = () => {
@@ -61,15 +60,6 @@ const Auth = () => {
       <Header />
       <main className="flex-grow flex items-center justify-center p-4">
         <div className="w-full max-w-md">
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate(-1)} 
-            className=""
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            {t("backToHome")}
-          </Button>
-
           <Card className="w-full backdrop-blur-sm bg-white/90 dark:bg-salon-dark/90 shadow-xl border-0">
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl font-bold text-center text-salon-primary">
