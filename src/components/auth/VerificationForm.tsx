@@ -46,16 +46,17 @@ const VerificationForm = ({
   const verifyOTP = async (data: z.infer<typeof schema>) => {
     setIsLoading(true);
     try {
-      const verifyParams = {
-        token: data.otp,
-        type: "sms" as const
-      };
-      
-      if (method === "email") {
-        verifyParams.email = contact;
-      } else {
-        verifyParams.phone = contact;
-      }
+      const verifyParams = method === "email" 
+        ? {
+            email: contact,
+            token: data.otp,
+            type: "signup" as const
+          }
+        : {
+            phone: contact,
+            token: data.otp,
+            type: "sms" as const
+          };
       
       const { data: verifyData, error } = await supabase.auth.verifyOtp(verifyParams);
 
@@ -76,8 +77,6 @@ const VerificationForm = ({
     setResendDisabled(true);
     
     try {
-      let signInOptions = {};
-      
       if (method === "email") {
         const { error } = await supabase.auth.signInWithOtp({
           email: contact

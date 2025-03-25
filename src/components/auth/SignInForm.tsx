@@ -12,6 +12,7 @@ import VerificationForm from "./VerificationForm";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Mail, Phone, Facebook, Mail as MailIcon, Instagram } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { Provider } from "@supabase/supabase-js";
 
 interface SignInFormProps {
   isLoading: boolean;
@@ -88,7 +89,7 @@ const SignInForm = ({ isLoading, setIsLoading, onSuccess, onError }: SignInFormP
     }
   };
 
-  const handleSocialLogin = async (provider: 'facebook' | 'google' | 'instagram') => {
+  const handleSocialLogin = async (provider: Provider) => {
     setIsLoading(true);
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
@@ -102,7 +103,7 @@ const SignInForm = ({ isLoading, setIsLoading, onSuccess, onError }: SignInFormP
       // No need to call onSuccess here as the user will be redirected to the provider's auth page
     } catch (error: any) {
       console.error(`Sign in with ${provider} error:`, error);
-      onError(error.message || t("socialSignInError") || `Error signing in with ${provider}`);
+      onError(error.message || t("signInError") || `Error signing in with ${provider}`);
       setIsLoading(false);
     }
   };
@@ -227,7 +228,7 @@ const SignInForm = ({ isLoading, setIsLoading, onSuccess, onError }: SignInFormP
         </div>
         <div className="relative flex justify-center">
           <span className="bg-background px-2 text-xs text-muted-foreground">
-            {t("orContinueWith") || "Or continue with"}
+            {t("orContinueWith")}
           </span>
         </div>
       </div>
@@ -259,7 +260,7 @@ const SignInForm = ({ isLoading, setIsLoading, onSuccess, onError }: SignInFormP
           type="button" 
           variant="outline"
           className="flex items-center justify-center gap-2"
-          onClick={() => handleSocialLogin('instagram')}
+          onClick={() => handleSocialLogin('azure')}
           disabled={isLoading}
         >
           <Instagram className="h-4 w-4" />
