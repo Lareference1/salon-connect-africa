@@ -140,5 +140,16 @@ export const fr = {
   // Adding missing translation keys
   password: "Mot de passe",
   verificationError: "Erreur lors de la vérification",
-  resendCodeError: "Erreur lors du renvoi du code"
+  resendCodeError: "Erreur lors du renvoi du code",
+  
+  // New missing keys that caused errors
+  emailNotConfirmed: "Email non confirmé",
+  checkYourEmailForVerificationLink: "Veuillez vérifier votre email pour un lien de vérification",
+  invalidCredentials: "Identifiants invalides",
+  emailOrPasswordIncorrect: "Email ou mot de passe incorrect. Veuillez réessayer.",
+  phoneOrPasswordIncorrect: "Numéro de téléphone ou mot de passe incorrect. Veuillez réessayer.",
+  connectionError: "Erreur de connexion. Veuillez vérifier votre connexion internet.",
+  unsupportedProvider: "Fournisseur non pris en charge",
+  providerNotConfigured: "La connexion {{provider}} n'est pas configurée. Veuillez essayer une autre méthode."
 };
+

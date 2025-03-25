@@ -140,5 +140,16 @@ export const en = {
   // Adding missing translation keys
   password: "Password",
   verificationError: "Error during verification",
-  resendCodeError: "Error resending code"
+  resendCodeError: "Error resending code",
+  
+  // New missing keys that caused errors
+  emailNotConfirmed: "Email Not Confirmed",
+  checkYourEmailForVerificationLink: "Please check your email for a verification link",
+  invalidCredentials: "Invalid Credentials",
+  emailOrPasswordIncorrect: "Email or password is incorrect. Please try again.",
+  phoneOrPasswordIncorrect: "Phone number or password is incorrect. Please try again.",
+  connectionError: "Connection error. Please check your internet connection.",
+  unsupportedProvider: "Unsupported Provider",
+  providerNotConfigured: "{{provider}} login is not configured. Please try another method."
 };
+

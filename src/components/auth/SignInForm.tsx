@@ -157,7 +157,7 @@ const SignInForm = ({ isLoading, setIsLoading, onSuccess, onError }: SignInFormP
         if (error.message.includes("unsupported_provider")) {
           toast({
             title: t("unsupportedProvider") || "Unsupported Provider",
-            description: t("providerNotConfigured", { provider }) || `${provider} login is not configured. Please try another method.`,
+            description: t("providerNotConfigured") || `${provider} login is not configured. Please try another method.`,
             variant: "destructive",
           });
           setIsLoading(false);
@@ -334,7 +334,7 @@ const SignInForm = ({ isLoading, setIsLoading, onSuccess, onError }: SignInFormP
           type="button" 
           variant="outline"
           className="flex items-center justify-center gap-2"
-          onClick={() => handleSocialLogin('instagram')}
+          onClick={() => handleSocialLogin('azure')}
           disabled={isLoading}
         >
           <Instagram className="h-4 w-4" />
