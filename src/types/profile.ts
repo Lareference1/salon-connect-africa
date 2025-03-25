@@ -19,3 +19,13 @@ export const profileSchema = z.object({
 });
 
 export type ProfileFormValues = z.infer<typeof profileSchema>;
+
+export type UserRole = 'salon' | 'braider' | 'customer';
+
+export function canAccessBraiders(userType: UserRole | null | undefined): boolean {
+  return userType === 'salon' || userType === 'customer';
+}
+
+export function canAccessSalons(userType: UserRole | null | undefined): boolean {
+  return userType === 'braider' || userType === 'customer';
+}

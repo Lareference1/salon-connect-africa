@@ -51,16 +51,18 @@ export const useProfileForm = (user: User | null, onSuccess?: (data: ProfileForm
         }
         
         if (data) {
+          // Set basic profile fields
           form.setValue('fullName', data.full_name || '');
           form.setValue('bio', data.bio || '');
           form.setValue('phone', data.phone || '');
           form.setValue('preferredContact', data.preferred_contact as 'email' | 'phone' || 'email');
           form.setValue('userType', data.user_type as 'salon' | 'braider' | 'customer' || 'customer');
           
-          // Set business-related fields
+          // Set business-related fields if they exist
+          // Note: These fields might not exist in older database schemas
           form.setValue('businessName', data.business_name || '');
           form.setValue('location', data.location || '');
-          form.setValue('specialties', data.specialties || '');
+          form.setValue('specialties', Array.isArray(data.specialties) ? data.specialties.join(', ') : (data.specialties || ''));
           form.setValue('hiringStatus', data.hiring_status ? 'true' : 'false');
           form.setValue('experience', data.experience || '');
           form.setValue('businessDescription', data.business_description || '');
