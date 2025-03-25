@@ -6,7 +6,6 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -16,18 +15,18 @@ export const LanguageThemeToggle = () => {
 
   return (
     <div className="flex items-center space-x-2">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <Globe className="h-5 w-5" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={toggleLanguage}>
-            {language === "fr" ? "English" : "Français"}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        onClick={toggleLanguage}
+        title={language === "fr" ? "Switch to English" : "Passer au français"}
+        className="relative"
+      >
+        <Globe className="h-5 w-5" />
+        <span className="absolute -top-1 -right-1 text-[10px] font-bold bg-salon-primary text-white rounded-full w-4 h-4 flex items-center justify-center">
+          {language === "fr" ? "EN" : "FR"}
+        </span>
+      </Button>
 
       <Button variant="ghost" size="icon" onClick={toggleTheme}>
         {theme === "light" ? (
