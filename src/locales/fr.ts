@@ -66,5 +66,17 @@ export const fr = {
   specialties: "Spécialités:",
   hiring: "Recrute",
   noSalonFound: "Aucun salon trouvé",
-  tryOtherCriteria: "Veuillez essayer d'autres critères de recherche."
+  tryOtherCriteria: "Veuillez essayer d'autres critères de recherche.",
+  
+  // Braiders page
+  discoverBraiders: "Trouvez des tresseuses talentueuses",
+  findBestBraiders: "Découvrez les meilleures tresseuses africaines disponibles pour travailler avec votre salon.",
+  availability: "Disponibilité",
+  selectAvailability: "Sélectionner une disponibilité",
+  allAvailabilities: "Toutes les disponibilités",
+  availableNow: "Disponible maintenant",
+  available: "Disponible",
+  booked: "Réservée",
+  experience: "Expérience:",
+  years: "ans"
 };

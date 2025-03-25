@@ -66,5 +66,17 @@ export const en = {
   specialties: "Specialties:",
   hiring: "Hiring",
   noSalonFound: "No salon found",
-  tryOtherCriteria: "Please try other search criteria."
+  tryOtherCriteria: "Please try other search criteria.",
+  
+  // Braiders page
+  discoverBraiders: "Find talented braiders",
+  findBestBraiders: "Discover the best African braiders available to work with your salon.",
+  availability: "Availability",
+  selectAvailability: "Select availability",
+  allAvailabilities: "All availabilities",
+  availableNow: "Available now",
+  available: "Available",
+  booked: "Booked",
+  experience: "Experience:",
+  years: "years"
 };
