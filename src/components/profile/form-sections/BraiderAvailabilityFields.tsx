@@ -34,7 +34,7 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
       
       setSelectedDates(validDates);
     }
-  }, []);
+  }, []); // Run only once on mount
 
   // Update form value when selected dates change
   useEffect(() => {
@@ -138,21 +138,24 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
                       align="start"
                       side="bottom"
                       sideOffset={5}
-                      avoidCollisions={false}
                     >
                       <Calendar
                         mode="multiple"
                         selected={selectedDates}
                         onSelect={(dates) => {
-                          // For multiple mode, react-day-picker will pass an array of dates
                           if (dates) {
-                            setSelectedDates(Array.isArray(dates) ? dates : [dates]);
+                            // Make sure we only set valid Date objects
+                            const validDates = Array.isArray(dates) 
+                              ? dates.filter(d => d instanceof Date && !isNaN(d.getTime()))
+                              : (dates instanceof Date && !isNaN(dates.getTime())) ? [dates] : [];
+                            
+                            setSelectedDates(validDates);
                           } else {
                             setSelectedDates([]);
                           }
                         }}
                         disabled={(date) => date < new Date()}
-                        className={cn("p-3 pointer-events-auto")}
+                        className="p-3"
                       />
                     </PopoverContent>
                   </Popover>
