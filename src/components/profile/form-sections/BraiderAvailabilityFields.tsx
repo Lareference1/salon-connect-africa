@@ -24,6 +24,18 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
     control
   });
 
+  // Initialize selectedDates from form value if it exists
+  useEffect(() => {
+    if (unavailableDatesField.value && Array.isArray(unavailableDatesField.value)) {
+      // Ensure all items in the array are valid Date objects
+      const validDates = unavailableDatesField.value
+        .filter(d => d instanceof Date && !isNaN(d.getTime()))
+        .map(d => new Date(d)); // Convert to Date objects to ensure consistency
+      
+      setSelectedDates(validDates);
+    }
+  }, []);
+
   // Update form value when selected dates change
   useEffect(() => {
     unavailableDatesField.onChange(selectedDates);
@@ -35,12 +47,16 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
     setSelectedDates(current => {
       // Check if date already exists in the array
       const dateExists = current.some(
-        d => d.toDateString() === date.toDateString()
+        d => d instanceof Date && date instanceof Date && 
+             d.toDateString() === date.toDateString()
       );
       
       // If it exists, remove it, otherwise add it
       if (dateExists) {
-        return current.filter(d => d.toDateString() !== date.toDateString());
+        return current.filter(
+          d => d instanceof Date && date instanceof Date && 
+               d.toDateString() !== date.toDateString()
+        );
       } else {
         return [...current, date];
       }
@@ -48,8 +64,14 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
   };
 
   const removeDate = (dateToRemove: Date) => {
+    if (!(dateToRemove instanceof Date)) return;
+    
     setSelectedDates(current => 
-      current.filter(date => date.toDateString() !== dateToRemove.toDateString())
+      current.filter(date => 
+        date instanceof Date && 
+        dateToRemove instanceof Date && 
+        date.toDateString() !== dateToRemove.toDateString()
+      )
     );
   };
 
@@ -121,9 +143,15 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
                       <Calendar
                         mode="multiple"
                         selected={selectedDates}
-                        onSelect={(date) => handleDateSelect(date)}
+                        onSelect={(selectedDates) => {
+                          // The react-day-picker passes dates array when in multiple mode
+                          if (Array.isArray(selectedDates)) {
+                            setSelectedDates(selectedDates);
+                          } else if (selectedDates instanceof Date) {
+                            handleDateSelect(selectedDates);
+                          }
+                        }}
                         disabled={(date) => date < new Date()}
-                        initialFocus={false}
                         className={cn("p-3 pointer-events-auto")}
                       />
                     </PopoverContent>
@@ -133,27 +161,21 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
                 {selectedDates.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-3">
                     {selectedDates
+                      .filter(date => date instanceof Date && !isNaN(date.getTime()))
                       .sort((a, b) => a.getTime() - b.getTime())
-                      .map((date, index) => {
-                        // Ensure date is a valid Date object before formatting
-                        if (!(date instanceof Date) || isNaN(date.getTime())) {
-                          return null;
-                        }
-                        
-                        return (
-                          <Badge 
-                            key={index} 
-                            variant="secondary"
-                            className="flex items-center gap-1 py-1 px-2"
-                          >
-                            {format(date, "PPP")}
-                            <X 
-                              className="h-3 w-3 cursor-pointer hover:text-destructive" 
-                              onClick={() => removeDate(date)}
-                            />
-                          </Badge>
-                        );
-                      })}
+                      .map((date, index) => (
+                        <Badge 
+                          key={index} 
+                          variant="secondary"
+                          className="flex items-center gap-1 py-1 px-2"
+                        >
+                          {format(date, "PPP")}
+                          <X 
+                            className="h-3 w-3 cursor-pointer hover:text-destructive" 
+                            onClick={() => removeDate(date)}
+                          />
+                        </Badge>
+                      ))}
                   </div>
                 )}
                 
