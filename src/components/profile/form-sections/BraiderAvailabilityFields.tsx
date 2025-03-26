@@ -34,7 +34,7 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
       
       setSelectedDates(validDates);
     }
-  }, []); // Run only once on mount
+  }, [unavailableDatesField.value]); // Add unavailableDatesField.value as a dependency
 
   // Update form value when selected dates change
   useEffect(() => {
@@ -143,13 +143,17 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
                         mode="multiple"
                         selected={selectedDates}
                         onSelect={(dates) => {
+                          // Need to use a type assertion to help TypeScript understand the structure
                           if (dates) {
-                            // Make sure we only set valid Date objects
-                            const validDates = Array.isArray(dates) 
-                              ? dates.filter(d => d instanceof Date && !isNaN(d.getTime()))
-                              : (dates instanceof Date && !isNaN(dates.getTime())) ? [dates] : [];
-                            
-                            setSelectedDates(validDates);
+                            if (Array.isArray(dates)) {
+                              // Filter valid dates from the array
+                              const validDates = dates
+                                .filter((d): d is Date => d instanceof Date && !isNaN(d.getTime()));
+                              setSelectedDates(validDates);
+                            } else if (dates instanceof Date && !isNaN(dates.getTime())) {
+                              // Single date case
+                              setSelectedDates([dates]);
+                            }
                           } else {
                             setSelectedDates([]);
                           }
