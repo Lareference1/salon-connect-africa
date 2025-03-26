@@ -110,14 +110,12 @@ const DateSelector = ({ control }: DateSelectorProps) => {
                       return;
                     }
                     
+                    // Since we're using TypeScript, we'll properly type the dates parameter
+                    // When mode="multiple", dates is always Date[] | undefined
                     if (Array.isArray(dates)) {
-                      // All dates in the array will be Date objects as per react-day-picker type
                       setSelectedDates(dates);
-                    } else if (dates instanceof Date) {
-                      // Single date case
-                      setSelectedDates([dates]);
                     } else {
-                      // Fallback for unexpected cases
+                      // Fallback case, reset to empty array
                       setSelectedDates([]);
                     }
                   }}
