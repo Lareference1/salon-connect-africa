@@ -8,18 +8,24 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import FloatingElement from '@/components/FloatingElement';
+import { useToast } from '@/components/ui/use-toast';
 
 const UserSettings = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
   
-  // If not authenticated, redirect to auth page
+  // If not authenticated, redirect to auth page with a message
   useEffect(() => {
     if (!user) {
-      // Direct navigation to auth page without showing toast
+      toast({
+        title: "Authentication required",
+        description: "Please sign in to access your profile settings.",
+        variant: "destructive",
+      });
       navigate('/auth');
     }
-  }, [user, navigate]);
+  }, [user, navigate, toast]);
 
   // If user is not authenticated, don't render the rest of the component
   if (!user) {
