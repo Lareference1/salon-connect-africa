@@ -12,11 +12,6 @@ const BusinessProfileSettings = () => {
         </p>
       </div>
       
-      <div className="flex space-x-4 mb-6">
-        <a href="#salon" className="flex-1 py-2 px-4 text-center rounded-md bg-primary text-primary-foreground">Salon</a>
-        <a href="#braider" className="flex-1 py-2 px-4 text-center rounded-md bg-secondary/20 text-secondary-foreground hover:bg-secondary/30">Braider</a>
-      </div>
-      
       <TabsContent value="salon">
         <div className="space-y-4">
           <div className="mb-2">
