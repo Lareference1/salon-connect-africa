@@ -13,6 +13,7 @@ import Braiders from "./pages/Braiders";
 import About from "./pages/About";
 import Auth from "./pages/Auth";
 import UserSettings from "./pages/UserSettings";
+import UserDashboard from "./pages/UserDashboard";
 import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
@@ -43,6 +44,7 @@ const App = () => (
                   <Route path="/about" element={<About />} />
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/settings" element={<UserSettings />} />
+                  <Route path="/dashboard" element={<UserDashboard />} />
                   <Route path="/privacy" element={<PrivacyPolicy />} />
                   <Route path="/terms" element={<TermsOfService />} />
                   <Route path="*" element={<NotFound />} />
