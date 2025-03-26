@@ -1,12 +1,13 @@
 
 import { useState } from 'react';
-import { Star, MapPin, Briefcase } from 'lucide-react';
+import { Star, MapPin, Briefcase, Phone } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/components/auth/AuthContext';
 import { Badge } from '@/components/ui/badge';
 import SalonEditForm from './SalonEditForm';
 import { SalonData } from '@/data/salonsData';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 interface SalonCardProps {
   salon: SalonData;
@@ -81,14 +82,53 @@ const SalonCard = ({ salon, onUpdate }: SalonCardProps) => {
             </p>
           )}
           
-          <Button 
-            variant={salon.hiringStatus ? "default" : "outline"} 
-            size="sm" 
-            className={salon.hiringStatus ? "w-full bg-salon-primary hover:bg-salon-primary/90" : "w-full"}
-          >
-            <Briefcase className="h-4 w-4 mr-2" />
-            {salon.hiringStatus ? "Apply Now" : "View Details"}
-          </Button>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full text-salon-primary border-salon-primary hover:bg-salon-primary/10"
+              >
+                <Phone className="h-4 w-4 mr-2" />
+                Contact
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-4">
+              <div className="space-y-2">
+                <h4 className="font-medium text-sm">Contact Information</h4>
+                {salon.phone && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <Phone className="h-4 w-4 text-salon-primary" />
+                    <span>{salon.phone}</span>
+                  </div>
+                )}
+                {salon.email && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <svg className="h-4 w-4 text-salon-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect width="20" height="16" x="2" y="4" rx="2" />
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                    </svg>
+                    <span>{salon.email}</span>
+                  </div>
+                )}
+                {!salon.phone && !salon.email && (
+                  <p className="text-sm text-gray-500">No contact information available</p>
+                )}
+                {salon.website && (
+                  <div className="pt-2">
+                    <a 
+                      href={salon.website} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-sm text-salon-primary hover:underline"
+                    >
+                      Visit Website
+                    </a>
+                  </div>
+                )}
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 
