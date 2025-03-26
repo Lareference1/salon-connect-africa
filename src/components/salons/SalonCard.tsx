@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Star, MapPin, Briefcase, Edit } from 'lucide-react';
+import { Star, MapPin, Briefcase } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/components/auth/AuthContext';
@@ -28,10 +28,6 @@ const SalonCard = ({ salon, onUpdate }: SalonCardProps) => {
   const { user } = useAuth();
   const [isEditOpen, setIsEditOpen] = useState(false);
 
-  const handleEditClick = () => {
-    setIsEditOpen(true);
-  };
-
   const handleEditClose = () => {
     setIsEditOpen(false);
   };
@@ -57,17 +53,6 @@ const SalonCard = ({ salon, onUpdate }: SalonCardProps) => {
               <Badge variant="default" className="bg-green-500 hover:bg-green-600">
                 Hiring
               </Badge>
-            )}
-            {user && onUpdate && (
-              <Button 
-                size="icon" 
-                variant="secondary" 
-                className="h-8 w-8 rounded-full bg-white dark:bg-gray-700"
-                onClick={handleEditClick}
-              >
-                <Edit className="h-4 w-4" />
-                <span className="sr-only">Edit</span>
-              </Button>
             )}
           </div>
         </div>
