@@ -28,8 +28,9 @@ const DateSelector = ({ control }: DateSelectorProps) => {
     if (unavailableDatesField.value && Array.isArray(unavailableDatesField.value)) {
       // Ensure all items in the array are valid Date objects
       const validDates = unavailableDatesField.value
-        .filter((d: unknown) => d instanceof Date && !isNaN((d as Date).getTime()))
-        .map((d: unknown) => new Date(d as Date)); // Convert to Date objects to ensure consistency
+        .filter((item: unknown): item is Date => 
+          item instanceof Date && !isNaN(item.getTime())
+        );
       
       setSelectedDates(validDates);
     }
@@ -46,15 +47,13 @@ const DateSelector = ({ control }: DateSelectorProps) => {
     setSelectedDates(current => {
       // Check if date already exists in the array
       const dateExists = current.some(
-        d => d instanceof Date && date instanceof Date && 
-             d.toDateString() === date.toDateString()
+        d => d.toDateString() === date.toDateString()
       );
       
       // If it exists, remove it, otherwise add it
       if (dateExists) {
         return current.filter(
-          d => d instanceof Date && date instanceof Date && 
-               d.toDateString() !== date.toDateString()
+          d => d.toDateString() !== date.toDateString()
         );
       } else {
         return [...current, date];
@@ -63,14 +62,8 @@ const DateSelector = ({ control }: DateSelectorProps) => {
   };
 
   const removeDate = (dateToRemove: Date) => {
-    if (!(dateToRemove instanceof Date)) return;
-    
     setSelectedDates(current => 
-      current.filter(date => 
-        date instanceof Date && 
-        dateToRemove instanceof Date && 
-        date.toDateString() !== dateToRemove.toDateString()
-      )
+      current.filter(date => date.toDateString() !== dateToRemove.toDateString())
     );
   };
 
@@ -118,12 +111,9 @@ const DateSelector = ({ control }: DateSelectorProps) => {
                     }
                     
                     if (Array.isArray(dates)) {
-                      // Filter out invalid dates from the array
-                      const validDates = dates.filter((date: unknown): date is Date => {
-                        return date instanceof Date && !isNaN((date as Date).getTime());
-                      });
-                      setSelectedDates(validDates);
-                    } else if (dates instanceof Date && !isNaN(dates.getTime())) {
+                      // All dates in the array will be Date objects as per react-day-picker type
+                      setSelectedDates(dates);
+                    } else if (dates instanceof Date) {
                       // Single date case
                       setSelectedDates([dates]);
                     } else {
@@ -141,7 +131,6 @@ const DateSelector = ({ control }: DateSelectorProps) => {
           {selectedDates.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-3">
               {selectedDates
-                .filter(date => date instanceof Date && !isNaN(date.getTime()))
                 .sort((a, b) => a.getTime() - b.getTime())
                 .map((date, index) => (
                   <Badge 
