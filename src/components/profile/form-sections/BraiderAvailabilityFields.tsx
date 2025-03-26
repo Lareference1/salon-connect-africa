@@ -143,18 +143,23 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
                         mode="multiple"
                         selected={selectedDates}
                         onSelect={(dates) => {
-                          // Need to use a type assertion to help TypeScript understand the structure
-                          if (dates) {
-                            if (Array.isArray(dates)) {
-                              // Filter valid dates from the array
-                              const validDates = dates
-                                .filter((d): d is Date => d instanceof Date && !isNaN(d.getTime()));
-                              setSelectedDates(validDates);
-                            } else if (dates instanceof Date && !isNaN(dates.getTime())) {
-                              // Single date case
-                              setSelectedDates([dates]);
-                            }
+                          // Handle dates safely with proper type checking
+                          if (dates === undefined) {
+                            setSelectedDates([]);
+                            return;
+                          }
+                          
+                          if (Array.isArray(dates)) {
+                            // Filter out invalid dates from the array
+                            const validDates = dates.filter((date): date is Date => {
+                              return date instanceof Date && !isNaN(date.getTime());
+                            });
+                            setSelectedDates(validDates);
+                          } else if (dates instanceof Date && !isNaN(dates.getTime())) {
+                            // Single date case
+                            setSelectedDates([dates]);
                           } else {
+                            // Fallback for unexpected cases
                             setSelectedDates([]);
                           }
                         }}
