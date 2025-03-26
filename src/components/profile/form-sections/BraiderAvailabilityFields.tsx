@@ -77,13 +77,20 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
                     <PopoverContent 
                       className="w-auto p-0" 
                       align="start"
+                      side="bottom"
+                      sideOffset={5}
+                      avoidCollisions={false}
                     >
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={field.onChange}
+                        onSelect={(day) => {
+                          field.onChange(day);
+                          // Close the popover after selection to prevent scrolling issues
+                          document.body.click();
+                        }}
                         disabled={(date) => date < new Date()}
-                        initialFocus
+                        initialFocus={false}
                         className={cn("p-3 pointer-events-auto")}
                       />
                     </PopoverContent>
