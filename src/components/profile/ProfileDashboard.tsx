@@ -46,7 +46,24 @@ const ProfileDashboard = () => {
         }
         
         if (data) {
-          setProfileData(data);
+          // Create a properly typed profile data object
+          const typedProfileData: ProfileData = {
+            full_name: data.full_name,
+            bio: data.bio,
+            email: data.email,
+            phone: data.phone,
+            image: data.image,
+            location: data.location,
+            experience: data.experience,
+            specialties: data.specialties,
+            profile_type: data.profile_type,
+            // Ensure preferred_contact is either 'email', 'phone' or undefined
+            preferred_contact: data.preferred_contact === 'email' || data.preferred_contact === 'phone' 
+              ? data.preferred_contact as 'email' | 'phone' 
+              : 'email' // Default to email if value is invalid
+          };
+          
+          setProfileData(typedProfileData);
         }
       } catch (error) {
         console.error('Error fetching profile:', error);
