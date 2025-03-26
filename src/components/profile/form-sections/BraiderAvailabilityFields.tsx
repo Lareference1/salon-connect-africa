@@ -64,6 +64,9 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
                             "w-full pl-3 text-left font-normal",
                             !field.value && "text-muted-foreground"
                           )}
+                          onClick={(e) => {
+                            e.preventDefault(); // Prevent default button behavior
+                          }}
                         >
                           {field.value ? (
                             format(field.value, "PPP")
@@ -74,7 +77,12 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start" sideOffset={5}>
+                    <PopoverContent 
+                      className="w-auto p-0" 
+                      align="start" 
+                      sideOffset={5}
+                      onOpenAutoFocus={(e) => e.preventDefault()} // Prevent auto focus that can cause scrolling
+                    >
                       <Calendar
                         mode="single"
                         selected={field.value}
