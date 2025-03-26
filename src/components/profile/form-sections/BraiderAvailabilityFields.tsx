@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
@@ -7,7 +7,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Calendar as CalendarIcon, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { Control } from 'react-hook-form';
+import { Control, useController } from 'react-hook-form';
 import { Badge } from '@/components/ui/badge';
 
 interface BraiderAvailabilityFieldsProps {
@@ -15,15 +15,19 @@ interface BraiderAvailabilityFieldsProps {
 }
 
 const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) => {
-  const availability = control._formValues.availability;
+  const availability = control._formValues?.availability || 'available';
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
+  
+  // Use useController instead of directly accessing internal properties
+  const { field: unavailableDatesField } = useController({
+    name: 'unavailableDates',
+    control
+  });
 
   // Update form value when selected dates change
-  React.useEffect(() => {
-    if (control._formValues.unavailableDates !== selectedDates) {
-      control._fieldsRef.current.unavailableDates?._f.onChange(selectedDates);
-    }
-  }, [selectedDates, control]);
+  useEffect(() => {
+    unavailableDatesField.onChange(selectedDates);
+  }, [selectedDates, unavailableDatesField]);
 
   const handleDateSelect = (date: Date | undefined) => {
     if (!date) return;
@@ -113,11 +117,12 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
                       side="bottom"
                       sideOffset={5}
                       avoidCollisions={false}
+                      initialFocus={false}
                     >
                       <Calendar
                         mode="multiple"
                         selected={selectedDates}
-                        onSelect={(day) => handleDateSelect(day)}
+                        onSelect={(date) => handleDateSelect(date)}
                         disabled={(date) => date < new Date()}
                         initialFocus={false}
                         className={cn("p-3 pointer-events-auto")}
