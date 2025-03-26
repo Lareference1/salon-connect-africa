@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import SearchForm from '@/components/salons/SearchForm';
 import SalonCard, { SalonData } from '@/components/salons/SalonCard';
 import NoResults from '@/components/salons/NoResults';
+import { supabase } from '@/integrations/supabase/client';
 import { salonsData } from '@/data/salonsData';
 
 const Salons = () => {
@@ -19,8 +20,9 @@ const Salons = () => {
   const [location, setLocation] = useState("");
   const [specialty, setSpecialty] = useState("");
   const [hiringOnly, setHiringOnly] = useState(false);
-  const [salonsState, setSalonsState] = useState(salonsData);
-  const [filteredSalons, setFilteredSalons] = useState(salonsData);
+  const [salonsState, setSalonsState] = useState<SalonData[]>(salonsData);
+  const [filteredSalons, setFilteredSalons] = useState<SalonData[]>(salonsData);
+  const [isLoading, setIsLoading] = useState(true);
   
   // Check if user is authenticated
   useEffect(() => {
@@ -29,6 +31,56 @@ const Salons = () => {
       navigate('/auth');
     }
   }, [user, navigate]);
+
+  // Fetch salon profiles from Supabase
+  useEffect(() => {
+    const fetchSalonProfiles = async () => {
+      try {
+        setIsLoading(true);
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('profile_type', 'salon');
+        
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+          // Transform Supabase data to match the SalonData interface
+          const supabaseSalons = data.map((salon, index) => ({
+            id: salon.id || index + 1000, // Use Supabase ID or fallback
+            name: salon.name || 'Unknown Salon',
+            location: salon.location || 'Location not specified',
+            rating: 4.5, // Default rating since it's not in the profiles table
+            image: salon.image || '/placeholder.svg',
+            specialties: salon.specialties || [],
+            hiringStatus: salon.hiring_status || false,
+            description: salon.description || '',
+            website: salon.website || '#',
+            phone: salon.phone || '',
+            email: salon.email || '',
+          }));
+          
+          // Combine with existing sample data to ensure UI has content
+          const combinedSalons = [...supabaseSalons, ...salonsData];
+          setSalonsState(combinedSalons);
+          setFilteredSalons(combinedSalons);
+        }
+      } catch (error) {
+        console.error('Error fetching salon profiles:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to load salon data',
+          variant: 'destructive',
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (user) {
+      fetchSalonProfiles();
+    }
+  }, [user, toast]);
 
   // If user is not authenticated, don't render the rest of the component
   if (!user) {
@@ -46,7 +98,7 @@ const Salons = () => {
     
     if (specialty && specialty !== "all") {
       results = results.filter(salon => 
-        salon.specialties.some(s => s.toLowerCase().includes(specialty.toLowerCase()))
+        salon.specialties && salon.specialties.some(s => s.toLowerCase().includes(specialty.toLowerCase()))
       );
     }
     
@@ -57,7 +109,7 @@ const Salons = () => {
     setFilteredSalons(results);
   };
 
-  const handleUpdateSalon = (id: number, updatedData: Partial<SalonData>) => {
+  const handleUpdateSalon = (id: number | string, updatedData: Partial<SalonData>) => {
     const updatedSalons = salonsState.map(salon => 
       salon.id === id ? { ...salon, ...updatedData } : salon
     );
@@ -96,19 +148,31 @@ const Salons = () => {
             onSearch={handleSearch}
           />
           
-          {/* Results Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {filteredSalons.map((salon) => (
-              <SalonCard 
-                key={salon.id} 
-                salon={salon} 
-                onUpdate={handleUpdateSalon}
-              />
-            ))}
-          </div>
-          
-          {/* No Results Component */}
-          {filteredSalons.length === 0 && <NoResults />}
+          {/* Loading State */}
+          {isLoading ? (
+            <div className="text-center py-8">
+              <div className="spinner-border inline-block w-8 h-8 border-4 rounded-full" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+              <p className="mt-2 text-gray-600 dark:text-gray-400">Loading salons...</p>
+            </div>
+          ) : (
+            <>
+              {/* Results Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                {filteredSalons.map((salon) => (
+                  <SalonCard 
+                    key={salon.id} 
+                    salon={salon} 
+                    onUpdate={handleUpdateSalon}
+                  />
+                ))}
+              </div>
+              
+              {/* No Results Component */}
+              {filteredSalons.length === 0 && <NoResults />}
+            </>
+          )}
         </div>
       </main>
       <Footer />

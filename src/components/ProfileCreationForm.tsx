@@ -9,7 +9,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/auth/AuthContext";
-import { PlusCircle, X } from "lucide-react";
+import { PlusCircle, X, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 import {
   Form,
   FormControl,
@@ -44,7 +46,9 @@ const ProfileCreationForm = () => {
   const { t } = useLanguage();
   const { toast } = useToast();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [newSpecialty, setNewSpecialty] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Initialize form with default values
   const form = useForm<FormValues>({
@@ -78,20 +82,40 @@ const ProfileCreationForm = () => {
   };
 
   const onSubmit = async (data: FormValues) => {
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "You must be logged in to create a profile",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
-      // In a real application, this would send data to your backend
-      console.log("Form submitted:", data);
+      // Insert the profile data into Supabase
+      const { error } = await supabase.from('profiles').upsert({
+        id: user.id,
+        name: data.name,
+        location: data.location,
+        description: data.description || '',
+        profile_type: data.profileType,
+        specialties: data.specialties,
+        hiring_status: data.profileType === 'salon' ? data.hiringStatus : null,
+        user_id: user.id,
+      });
       
-      // Simulate API call
-      setTimeout(() => {
-        toast({
-          title: "Profile Created!",
-          description: `Your ${data.profileType} profile has been created and will appear in the listings.`,
-        });
-        
-        // Reset form
-        form.reset();
-      }, 1000);
+      if (error) throw error;
+      
+      toast({
+        title: "Profile Created!",
+        description: `Your ${data.profileType} profile has been created and will appear in the listings.`,
+      });
+      
+      // Navigate to the appropriate page based on profile type
+      navigate(data.profileType === 'salon' ? '/salons' : '/braiders');
+      
     } catch (error) {
       console.error("Error creating profile:", error);
       toast({
@@ -99,6 +123,8 @@ const ProfileCreationForm = () => {
         description: "There was a problem creating your profile. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -272,8 +298,16 @@ const ProfileCreationForm = () => {
         <Button 
           type="submit" 
           className="w-full bg-gradient-to-r from-salon-primary to-salon-primary/90 hover:from-salon-primary/80 hover:to-salon-primary hover:scale-105 shadow-md"
+          disabled={isSubmitting}
         >
-          Create Profile
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Creating...
+            </>
+          ) : (
+            "Create Profile"
+          )}
         </Button>
       </form>
     </Form>

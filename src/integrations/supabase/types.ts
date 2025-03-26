@@ -15,15 +15,19 @@ export type Database = {
           business_description: string | null
           business_name: string | null
           created_at: string | null
+          description: string | null
           experience: string | null
           full_name: string | null
           hiring_status: boolean | null
           id: string
           location: string | null
+          name: string | null
           phone: string | null
           preferred_contact: string | null
+          profile_type: string | null
           specialties: string[] | null
           updated_at: string | null
+          user_id: string | null
           user_type: string | null
         }
         Insert: {
@@ -31,15 +35,19 @@ export type Database = {
           business_description?: string | null
           business_name?: string | null
           created_at?: string | null
+          description?: string | null
           experience?: string | null
           full_name?: string | null
           hiring_status?: boolean | null
           id: string
           location?: string | null
+          name?: string | null
           phone?: string | null
           preferred_contact?: string | null
+          profile_type?: string | null
           specialties?: string[] | null
           updated_at?: string | null
+          user_id?: string | null
           user_type?: string | null
         }
         Update: {
@@ -47,15 +55,19 @@ export type Database = {
           business_description?: string | null
           business_name?: string | null
           created_at?: string | null
+          description?: string | null
           experience?: string | null
           full_name?: string | null
           hiring_status?: boolean | null
           id?: string
           location?: string | null
+          name?: string | null
           phone?: string | null
           preferred_contact?: string | null
+          profile_type?: string | null
           specialties?: string[] | null
           updated_at?: string | null
+          user_id?: string | null
           user_type?: string | null
         }
         Relationships: []

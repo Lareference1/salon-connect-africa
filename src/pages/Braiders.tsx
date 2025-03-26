@@ -10,17 +10,19 @@ import BraiderCard from '@/components/braiders/BraiderCard';
 import NoResults from '@/components/braiders/NoResults';
 import { braidersData, BraiderData } from '@/data/braidersData';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const Braiders = () => {
   const { t } = useLanguage();
-  const { toast } = useToast();  // Keep this for the braider update notification
+  const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [location, setLocation] = useState("");
   const [specialty, setSpecialty] = useState("");
   const [availability, setAvailability] = useState("");
-  const [braidersState, setBraidersState] = useState(braidersData || []);
-  const [filteredBraiders, setFilteredBraiders] = useState(braidersData || []);
+  const [braidersState, setBraidersState] = useState<BraiderData[]>(braidersData || []);
+  const [filteredBraiders, setFilteredBraiders] = useState<BraiderData[]>(braidersData || []);
+  const [isLoading, setIsLoading] = useState(true);
   
   // Check if user is authenticated
   useEffect(() => {
@@ -29,6 +31,57 @@ const Braiders = () => {
       navigate('/auth');
     }
   }, [user, navigate]);
+
+  // Fetch braider profiles from Supabase
+  useEffect(() => {
+    const fetchBraiderProfiles = async () => {
+      try {
+        setIsLoading(true);
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('profile_type', 'braider');
+        
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+          // Transform Supabase data to match the BraiderData interface
+          const supabaseBraiders = data.map((braider, index) => ({
+            id: braider.id || index + 1000, // Use Supabase ID or fallback
+            name: braider.name || 'Unknown Braider',
+            location: braider.location || 'Location not specified',
+            image: braider.image || '/placeholder.svg',
+            specialties: braider.specialties || [],
+            rating: 4.5, // Default rating since it's not in the profiles table
+            experience: braider.experience || '1+ years',
+            bio: braider.description || '',
+            status: 'available', // Default status
+            availability: 'Disponible', // Default availability text
+            phone: braider.phone || '',
+            email: braider.email || '',
+          }));
+          
+          // Combine with existing sample data to ensure UI has content
+          const combinedBraiders = [...supabaseBraiders, ...braidersData];
+          setBraidersState(combinedBraiders);
+          setFilteredBraiders(combinedBraiders);
+        }
+      } catch (error) {
+        console.error('Error fetching braider profiles:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to load braider data',
+          variant: 'destructive',
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (user) {
+      fetchBraiderProfiles();
+    }
+  }, [user, toast]);
 
   // If user is not authenticated, don't render the rest of the component
   if (!user) {
@@ -57,9 +110,7 @@ const Braiders = () => {
     setFilteredBraiders(results);
   };
 
-  const handleUpdateBraider = (id: number, updatedData: Partial<BraiderData>) => {
-    if (!braidersState) return;
-    
+  const handleUpdateBraider = (id: number | string, updatedData: Partial<BraiderData>) => {
     const updatedBraiders = braidersState.map(braider => 
       braider.id === id ? { ...braider, ...updatedData } : braider
     );
@@ -98,21 +149,33 @@ const Braiders = () => {
             onSearch={handleSearch}
           />
           
-          {/* Results Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredBraiders && filteredBraiders.length > 0 ? (
-              filteredBraiders.map((braider) => (
-                <BraiderCard 
-                  key={braider.id} 
-                  braider={braider} 
-                  onUpdate={handleUpdateBraider}
-                />
-              ))
-            ) : null}
-          </div>
-          
-          {/* No Results Component */}
-          {(!filteredBraiders || filteredBraiders.length === 0) && <NoResults />}
+          {/* Loading State */}
+          {isLoading ? (
+            <div className="text-center py-8">
+              <div className="spinner-border inline-block w-8 h-8 border-4 rounded-full" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+              <p className="mt-2 text-gray-600 dark:text-gray-400">Loading braiders...</p>
+            </div>
+          ) : (
+            <>
+              {/* Results Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredBraiders && filteredBraiders.length > 0 ? (
+                  filteredBraiders.map((braider) => (
+                    <BraiderCard 
+                      key={braider.id} 
+                      braider={braider} 
+                      onUpdate={handleUpdateBraider}
+                    />
+                  ))
+                ) : null}
+              </div>
+              
+              {/* No Results Component */}
+              {(!filteredBraiders || filteredBraiders.length === 0) && <NoResults />}
+            </>
+          )}
         </div>
       </main>
       <Footer />
