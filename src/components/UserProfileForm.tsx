@@ -25,6 +25,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 
+type PreferredContactType = 'email' | 'phone';
+
 const profileSchema = z.object({
   fullName: z.string().min(2, 'Full name must be at least 2 characters'),
   bio: z.string().max(300, 'Bio must be less than 300 characters'),
@@ -95,7 +97,14 @@ const UserProfileForm = () => {
           profileForm.setValue('bio', data.bio || '');
           profileForm.setValue('email', data.email || user.email || '');
           profileForm.setValue('phone', data.phone || '');
-          profileForm.setValue('preferredContact', data.preferred_contact || 'email');
+          
+          const preferredContact = data.preferred_contact as PreferredContactType;
+          profileForm.setValue(
+            'preferredContact', 
+            preferredContact === 'email' || preferredContact === 'phone' 
+              ? preferredContact 
+              : 'email'
+          );
           
           if (data.image) {
             setProfileImage(data.image);
