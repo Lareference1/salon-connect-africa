@@ -4,7 +4,7 @@ import { FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/for
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { PlusCircle, X } from 'lucide-react';
-import { Control } from 'react-hook-form';
+import { Control, useFormContext } from 'react-hook-form';
 
 interface SpecialtiesFieldProps {
   control: Control<any>;
@@ -12,20 +12,21 @@ interface SpecialtiesFieldProps {
 
 const SpecialtiesField = ({ control }: SpecialtiesFieldProps) => {
   const [newSpecialty, setNewSpecialty] = useState("");
+  const { getValues, setValue } = useFormContext();
   
   const handleAddSpecialty = () => {
     if (!newSpecialty.trim()) return;
     
-    const currentSpecialties = control._formValues.specialties || [];
+    const currentSpecialties = getValues("specialties") || [];
     if (!currentSpecialties.includes(newSpecialty.trim())) {
-      control._methods.setValue("specialties", [...currentSpecialties, newSpecialty.trim()]);
+      setValue("specialties", [...currentSpecialties, newSpecialty.trim()]);
     }
     setNewSpecialty("");
   };
 
   const handleRemoveSpecialty = (specialty: string) => {
-    const currentSpecialties = control._formValues.specialties || [];
-    control._methods.setValue(
+    const currentSpecialties = getValues("specialties") || [];
+    setValue(
       "specialties",
       currentSpecialties.filter((s: string) => s !== specialty)
     );
@@ -63,7 +64,7 @@ const SpecialtiesField = ({ control }: SpecialtiesFieldProps) => {
             </div>
 
             <div className="flex flex-wrap gap-2 mt-2">
-              {control._formValues.specialties?.map((specialty: string, index: number) => (
+              {getValues("specialties")?.map((specialty: string, index: number) => (
                 <div 
                   key={index} 
                   className="bg-primary/10 text-primary px-3 py-1 rounded-full flex items-center"
