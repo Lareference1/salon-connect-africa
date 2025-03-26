@@ -11,13 +11,15 @@ import FloatingElement from '@/components/FloatingElement';
 import Logo from '@/components/header/Logo';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, User } from 'lucide-react';
+import { ChevronRight, User, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const Index = () => {
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, language, toggleLanguage } = useLanguage();
+  const { theme } = useTheme();
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -68,16 +70,30 @@ const Index = () => {
           <div className="transform-3d">
             <Logo />
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full p-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-300"
-            onClick={() => navigate('/auth')}
-            title={t('login')}
-            aria-label={t('login')}
-          >
-            <User className="h-5 w-5" />
-          </Button>
+          <div className="flex items-center space-x-2">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="rounded-full p-2 relative bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-300"
+              onClick={toggleLanguage}
+              title={language === "fr" ? "Switch to English" : "Passer au français"}
+            >
+              <Globe className="h-5 w-5" />
+              <span className="absolute -top-1 -right-1 text-[10px] font-bold bg-salon-primary text-white rounded-full w-4 h-4 flex items-center justify-center">
+                {language === "fr" ? "EN" : "FR"}
+              </span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full p-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-300"
+              onClick={() => navigate('/auth')}
+              title={t('login')}
+              aria-label={t('login')}
+            >
+              <User className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
         
         <div className="flex flex-col items-center gap-4 pt-6 sm:pt-12 px-4 relative z-10 animate-fade-in">
