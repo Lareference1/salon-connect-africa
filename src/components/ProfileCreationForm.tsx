@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/auth/AuthContext";
-import { PlusCircle, X, Loader2 } from "lucide-react";
+import { PlusCircle, X, Loader2, Camera, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import {
@@ -22,12 +22,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
+} from "@/components/ui/avatar";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 // Define the schema for form validation
@@ -35,7 +33,6 @@ const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   location: z.string().min(2, "Location must be at least 2 characters"),
   description: z.string().optional(),
-  profileType: z.enum(["salon", "braider"]),
   hiringStatus: z.boolean().optional(),
   specialties: z.array(z.string()).min(1, "At least one specialty is required"),
 });
@@ -49,6 +46,7 @@ const ProfileCreationForm = () => {
   const navigate = useNavigate();
   const [newSpecialty, setNewSpecialty] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   
   // Initialize form with default values
   const form = useForm<FormValues>({
@@ -57,11 +55,21 @@ const ProfileCreationForm = () => {
       name: "",
       location: "",
       description: "",
-      profileType: "salon",
       hiringStatus: false,
       specialties: [],
     },
   });
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleAddSpecialty = () => {
     if (!newSpecialty.trim()) return;
@@ -100,21 +108,21 @@ const ProfileCreationForm = () => {
         name: data.name,
         location: data.location,
         description: data.description || '',
-        profile_type: data.profileType,
         specialties: data.specialties,
-        hiring_status: data.profileType === 'salon' ? data.hiringStatus : null,
+        hiring_status: data.hiringStatus,
         user_id: user.id,
+        image: profileImage,
       });
       
       if (error) throw error;
       
       toast({
         title: "Profile Created!",
-        description: `Your ${data.profileType} profile has been created and will appear in the listings.`,
+        description: "Your profile has been created and will appear in the listings.",
       });
       
-      // Navigate to the appropriate page based on profile type
-      navigate(data.profileType === 'salon' ? '/salons' : '/braiders');
+      // Navigate to the appropriate page
+      navigate('/dashboard');
       
     } catch (error) {
       console.error("Error creating profile:", error);
@@ -141,42 +149,49 @@ const ProfileCreationForm = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="profileType"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Profile Type</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select profile type" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="salon">Salon</SelectItem>
-                    <SelectItem value="braider">Braider</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormDescription>
-                  Select whether you are a salon or an individual braider.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="flex items-center gap-6 mb-6">
+            <Avatar className="w-20 h-20 border-2 border-muted">
+              {profileImage ? (
+                <AvatarImage src={profileImage} alt="Profile" />
+              ) : (
+                <AvatarFallback className="bg-muted">
+                  <User className="h-8 w-8 text-muted-foreground" />
+                </AvatarFallback>
+              )}
+            </Avatar>
+            
+            <div className="flex flex-col space-y-2">
+              <Button 
+                type="button"
+                variant="outline" 
+                size="sm" 
+                className="flex items-center gap-2"
+                onClick={() => document.getElementById("profilePicUpload")?.click()}
+              >
+                <Camera className="h-4 w-4" />
+                <span>Upload Profile Photo</span>
+              </Button>
+              <p className="text-xs text-muted-foreground">
+                Upload a professional profile photo. JPG or PNG, up to 2MB.
+              </p>
+              <input 
+                type="file" 
+                id="profilePicUpload" 
+                accept="image/*" 
+                className="hidden" 
+                onChange={handleImageChange}
+              />
+            </div>
+          </div>
 
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{form.watch("profileType") === "salon" ? "Salon Name" : "Full Name"}</FormLabel>
+                <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder={form.watch("profileType") === "salon" ? "Enter salon name" : "Enter your name"} {...field} />
+                  <Input placeholder="Enter your name or business name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -271,28 +286,26 @@ const ProfileCreationForm = () => {
             )}
           />
 
-          {form.watch("profileType") === "salon" && (
-            <FormField
-              control={form.control}
-              name="hiringStatus"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>Currently Hiring</FormLabel>
-                    <FormDescription>
-                      Check this if your salon is currently looking for braiders.
-                    </FormDescription>
-                  </div>
-                </FormItem>
-              )}
-            />
-          )}
+          <FormField
+            control={form.control}
+            name="hiringStatus"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>Currently Hiring</FormLabel>
+                  <FormDescription>
+                    Check this if you are currently looking for braiders.
+                  </FormDescription>
+                </div>
+              </FormItem>
+            )}
+          />
         </div>
 
         <Button 
