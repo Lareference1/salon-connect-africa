@@ -28,6 +28,7 @@ const formSchema = z.object({
   profileType: z.enum(["salon", "braider"]).default("salon"),
   availability: z.enum(["available", "unavailable"]).default("available"),
   availableDate: z.date().optional(),
+  unavailableDates: z.array(z.date()).default([]),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -50,6 +51,7 @@ const ProfileCreationForm = () => {
       specialties: [],
       profileType: "salon",
       availability: "available",
+      unavailableDates: [],
     },
   });
 
@@ -73,6 +75,26 @@ const ProfileCreationForm = () => {
     setIsSubmitting(true);
 
     try {
+      // Format availability information
+      let availabilityInfo = '';
+      if (data.profileType === "braider") {
+        if (data.availability === "available") {
+          availabilityInfo = "Available now";
+        } else if (data.availability === "unavailable") {
+          if (data.unavailableDates && data.unavailableDates.length > 0) {
+            // Format the unavailable dates
+            const formattedDates = data.unavailableDates
+              .sort((a, b) => a.getTime() - b.getTime())
+              .map(date => format(date, "PPP"))
+              .join(", ");
+            
+            availabilityInfo = `Unavailable on: ${formattedDates}`;
+          } else {
+            availabilityInfo = "Not available";
+          }
+        }
+      }
+
       // Insert the profile data into Supabase
       const { error } = await supabase.from('profiles').upsert({
         id: user.id,
@@ -84,11 +106,7 @@ const ProfileCreationForm = () => {
         user_id: user.id,
         image: profileImage,
         profile_type: data.profileType,
-        experience: data.profileType === "braider" ? 
-          (data.availability === "unavailable" && data.availableDate 
-            ? `Available from ${format(data.availableDate, "PPP")}` 
-            : (data.availability === "available" ? "Available now" : "Not available")) 
-          : null,
+        experience: data.profileType === "braider" ? availabilityInfo : null,
       });
       
       if (error) throw error;

@@ -1,5 +1,5 @@
 
-import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProfileCreationForm from '@/components/ProfileCreationForm';
 
 const BusinessProfileSettings = () => {
@@ -11,6 +11,11 @@ const BusinessProfileSettings = () => {
           Create and manage your business listings. Choose the type of profile you want to create.
         </p>
       </div>
+      
+      <TabsList className="mb-6">
+        <TabsTrigger value="salon">Salon</TabsTrigger>
+        <TabsTrigger value="braider">Braider</TabsTrigger>
+      </TabsList>
       
       <TabsContent value="salon">
         <div className="space-y-4">

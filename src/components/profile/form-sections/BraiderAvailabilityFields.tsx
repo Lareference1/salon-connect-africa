@@ -1,13 +1,14 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { Calendar as CalendarIcon, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Control } from 'react-hook-form';
+import { Badge } from '@/components/ui/badge';
 
 interface BraiderAvailabilityFieldsProps {
   control: Control<any>;
@@ -15,6 +16,38 @@ interface BraiderAvailabilityFieldsProps {
 
 const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) => {
   const availability = control._formValues.availability;
+  const [selectedDates, setSelectedDates] = useState<Date[]>([]);
+
+  // Update form value when selected dates change
+  React.useEffect(() => {
+    if (control._formValues.unavailableDates !== selectedDates) {
+      control._fieldsRef.current.unavailableDates?._f.onChange(selectedDates);
+    }
+  }, [selectedDates, control]);
+
+  const handleDateSelect = (date: Date | undefined) => {
+    if (!date) return;
+    
+    setSelectedDates(current => {
+      // Check if date already exists in the array
+      const dateExists = current.some(
+        d => d.toDateString() === date.toDateString()
+      );
+      
+      // If it exists, remove it, otherwise add it
+      if (dateExists) {
+        return current.filter(d => d.toDateString() !== date.toDateString());
+      } else {
+        return [...current, date];
+      }
+    });
+  };
+
+  const removeDate = (dateToRemove: Date) => {
+    setSelectedDates(current => 
+      current.filter(date => date.toDateString() !== dateToRemove.toDateString())
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -50,10 +83,10 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
         <div className="pt-2">
           <FormField
             control={control}
-            name="availableDate"
+            name="unavailableDates"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel>Available from</FormLabel>
+                <FormLabel>Unavailable Days</FormLabel>
                 <div className="relative">
                   <Popover>
                     <PopoverTrigger asChild>
@@ -62,13 +95,13 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
                           variant={"outline"}
                           className={cn(
                             "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
+                            !selectedDates.length && "text-muted-foreground"
                           )}
                         >
-                          {field.value ? (
-                            format(field.value, "PPP")
+                          {selectedDates.length > 0 ? (
+                            `${selectedDates.length} day${selectedDates.length > 1 ? 's' : ''} selected`
                           ) : (
-                            <span>Select a date</span>
+                            <span>Select days you're unavailable</span>
                           )}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
@@ -82,13 +115,9 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
                       avoidCollisions={false}
                     >
                       <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={(day) => {
-                          field.onChange(day);
-                          // Close the popover after selection to prevent scrolling issues
-                          document.body.click();
-                        }}
+                        mode="multiple"
+                        selected={selectedDates}
+                        onSelect={(day) => handleDateSelect(day)}
                         disabled={(date) => date < new Date()}
                         initialFocus={false}
                         className={cn("p-3 pointer-events-auto")}
@@ -96,8 +125,27 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
                     </PopoverContent>
                   </Popover>
                 </div>
+                
+                {selectedDates.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {selectedDates.sort((a, b) => a.getTime() - b.getTime()).map((date, index) => (
+                      <Badge 
+                        key={index} 
+                        variant="secondary"
+                        className="flex items-center gap-1 py-1 px-2"
+                      >
+                        {format(date, "PPP")}
+                        <X 
+                          className="h-3 w-3 cursor-pointer hover:text-destructive" 
+                          onClick={() => removeDate(date)}
+                        />
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+                
                 <FormDescription>
-                  When will you be available again for bookings?
+                  Select specific days when you'll be unavailable for bookings.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
