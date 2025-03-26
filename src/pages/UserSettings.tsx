@@ -9,6 +9,13 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import FloatingElement from '@/components/FloatingElement';
 import { useToast } from '@/components/ui/use-toast';
+import { 
+  Tabs, 
+  TabsContent, 
+  TabsList, 
+  TabsTrigger 
+} from "@/components/ui/tabs";
+import ProfileCreationForm from '@/components/ProfileCreationForm';
 
 const UserSettings = () => {
   const { user } = useAuth();
@@ -55,10 +62,10 @@ const UserSettings = () => {
             <FloatingElement amplitude="small" delay={0.2}>
               <div className="glass-card p-6 md:p-8 mb-8">
                 <h1 className="text-3xl md:text-4xl font-display text-salon-dark dark:text-white mb-2">
-                  Profile Settings
+                  Settings
                 </h1>
                 <p className="text-muted-foreground">
-                  Manage your personal information and preferences
+                  Manage your personal information and business profiles
                 </p>
                 
                 <div className="mt-8 space-y-4">
@@ -68,8 +75,8 @@ const UserSettings = () => {
                   </div>
                   
                   <div className="p-4 rounded-lg bg-accent/5 border border-accent/10 transform-gpu hover:-translate-y-1 transition-all">
-                    <h3 className="font-medium">Account Preferences</h3>
-                    <p className="text-sm text-muted-foreground">Customize your account settings</p>
+                    <h3 className="font-medium">Business Profile</h3>
+                    <p className="text-sm text-muted-foreground">Create a salon or braider listing</p>
                   </div>
                   
                   <div className="p-4 rounded-lg bg-secondary/5 border border-secondary/10 transform-gpu hover:-translate-y-1 transition-all">
@@ -84,7 +91,30 @@ const UserSettings = () => {
           <div className="lg:col-span-8">
             <FloatingElement amplitude="small" delay={0.4}>
               <div className="glass-card p-6 md:p-8">
-                <UserProfileForm />
+                <Tabs defaultValue="personal" className="w-full">
+                  <TabsList className="grid w-full grid-cols-2 mb-6">
+                    <TabsTrigger value="personal">Personal Profile</TabsTrigger>
+                    <TabsTrigger value="business">Business Listing</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="personal">
+                    <UserProfileForm />
+                  </TabsContent>
+                  
+                  <TabsContent value="business">
+                    <div className="space-y-4">
+                      <div className="mb-6">
+                        <h2 className="text-2xl font-medium mb-2">Create Your Business Listing</h2>
+                        <p className="text-muted-foreground">
+                          Showcase your salon or braiding services to potential clients.
+                          Your profile will appear in the appropriate listings once approved.
+                        </p>
+                      </div>
+                      
+                      <ProfileCreationForm />
+                    </div>
+                  </TabsContent>
+                </Tabs>
               </div>
             </FloatingElement>
           </div>

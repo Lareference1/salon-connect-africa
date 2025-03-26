@@ -11,7 +11,7 @@ import FloatingElement from '@/components/FloatingElement';
 import Logo from '@/components/header/Logo';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 
@@ -64,10 +64,23 @@ const Index = () => {
           <div className="blob absolute h-[25vh] w-[25vh] md:h-[30vh] md:w-[30vh] bg-salon-accent2/10 rounded-full top-[60%] left-[20%] blur-3xl"></div>
         </div>
         
-        <div className="flex flex-col items-center gap-4 pt-6 sm:pt-12 px-4 relative z-10 animate-fade-in">
+        <div className="flex items-center justify-between px-6 py-4">
           <div className="transform-3d">
             <Logo />
           </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full p-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-300"
+            onClick={() => navigate('/auth')}
+            title={t('login')}
+            aria-label={t('login')}
+          >
+            <User className="h-5 w-5" />
+          </Button>
+        </div>
+        
+        <div className="flex flex-col items-center gap-4 pt-6 sm:pt-12 px-4 relative z-10 animate-fade-in">
           <h1 className="text-xl sm:text-3xl md:text-5xl font-display text-salon-dark dark:text-white text-center my-2 sm:my-4">
             <span className="inline-block animate-float-small">{t('heroTitle').split(' ').slice(0, 2).join(' ')}</span>{' '}
             <span className="text-salon-primary inline-block animate-float-medium">{t('heroTitle').split(' ').slice(2).join(' ')}</span>
