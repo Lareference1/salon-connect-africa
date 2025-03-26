@@ -6,10 +6,10 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/components/auth/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import SearchForm from '@/components/salons/SearchForm';
-import SalonCard, { SalonData } from '@/components/salons/SalonCard';
+import SalonCard from '@/components/salons/SalonCard';
 import NoResults from '@/components/salons/NoResults';
 import { supabase } from '@/integrations/supabase/client';
-import { salonsData, transformProfileToSalon } from '@/data/salonsData';
+import { salonsData, SalonData, transformProfileToSalon } from '@/data/salonsData';
 
 const Salons = () => {
   const { t } = useLanguage();
@@ -23,15 +23,12 @@ const Salons = () => {
   const [filteredSalons, setFilteredSalons] = useState<SalonData[]>(salonsData);
   const [isLoading, setIsLoading] = useState(true);
   
-  // Check if user is authenticated
   useEffect(() => {
     if (!user) {
-      // Direct navigation to auth page without showing toast
       navigate('/auth');
     }
   }, [user, navigate]);
 
-  // Fetch salon profiles from Supabase
   useEffect(() => {
     const fetchSalonProfiles = async () => {
       try {
@@ -44,10 +41,7 @@ const Salons = () => {
         if (error) throw error;
         
         if (data && data.length > 0) {
-          // Transform Supabase data to match the SalonData interface
           const supabaseSalons = data.map(salon => transformProfileToSalon(salon));
-          
-          // Combine with existing sample data to ensure UI has content
           const combinedSalons = [...supabaseSalons, ...salonsData];
           setSalonsState(combinedSalons);
           setFilteredSalons(combinedSalons);
@@ -69,7 +63,6 @@ const Salons = () => {
     }
   }, [user, toast]);
 
-  // If user is not authenticated, don't render the rest of the component
   if (!user) {
     return null;
   }
@@ -124,7 +117,6 @@ const Salons = () => {
             </p>
           </div>
           
-          {/* Search Form Component */}
           <SearchForm 
             location={location}
             setLocation={setLocation}
@@ -135,7 +127,6 @@ const Salons = () => {
             onSearch={handleSearch}
           />
           
-          {/* Loading State */}
           {isLoading ? (
             <div className="text-center py-8">
               <div className="spinner-border inline-block w-8 h-8 border-4 rounded-full" role="status">
@@ -145,7 +136,6 @@ const Salons = () => {
             </div>
           ) : (
             <>
-              {/* Results Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {filteredSalons.map((salon) => (
                   <SalonCard 
@@ -156,7 +146,6 @@ const Salons = () => {
                 ))}
               </div>
               
-              {/* No Results Component */}
               {filteredSalons.length === 0 && <NoResults />}
             </>
           )}

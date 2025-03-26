@@ -13,7 +13,7 @@ import BraiderEditForm from "./BraiderEditForm";
 
 interface BraiderCardProps {
   braider: BraiderData;
-  onUpdate?: (id: number, updatedData: Partial<BraiderData>) => void;
+  onUpdate?: (id: number | string, updatedData: Partial<BraiderData>) => void;
 }
 
 const BraiderCard = ({ braider, onUpdate }: BraiderCardProps) => {

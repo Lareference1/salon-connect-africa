@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Loader2, X } from 'lucide-react';
-import { SalonData } from './SalonCard';
+import { SalonData } from '@/data/salonsData';
 
 import {
   Form,
