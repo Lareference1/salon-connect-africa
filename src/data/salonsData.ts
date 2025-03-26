@@ -91,8 +91,8 @@ export const transformProfileToSalon = (profile: any): SalonData => {
     location: profile.location || 'Location not specified',
     image: profile.image || '/placeholder.svg',
     specialties: profile.specialties || [],
-    rating: 4.5, // Default rating
-    reviews: 0, // Default reviews count
+    rating: profile.rating || 4.5, // Default rating
+    reviews: profile.reviews || 0, // Default reviews count
     hiringStatus: profile.hiring_status || false,
     description: profile.description || profile.business_description || '',
     website: profile.website || '#',

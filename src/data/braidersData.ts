@@ -99,12 +99,12 @@ export const transformProfileToBraider = (profile: any): BraiderData => {
     location: profile.location || 'Location not specified',
     image: profile.image || '/placeholder.svg',
     specialties: profile.specialties || [],
-    rating: 4.5, // Default rating
-    reviews: 0, // Default reviews count
+    rating: profile.rating || 4.5, // Default rating
+    reviews: profile.reviews || 0, // Default reviews count
     experience: profile.experience || '1+ years',
     bio: profile.description || profile.bio || '',
-    status: 'available', // Default status
-    availability: 'Disponible', // Default availability text
+    status: profile.status || 'available', // Default status
+    availability: profile.availability || 'Disponible', // Default availability text
     phone: profile.phone || '',
     email: profile.email || '',
   };

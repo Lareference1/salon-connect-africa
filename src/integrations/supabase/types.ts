@@ -16,19 +16,23 @@ export type Database = {
           business_name: string | null
           created_at: string | null
           description: string | null
+          email: string | null
           experience: string | null
           full_name: string | null
           hiring_status: boolean | null
           id: string
+          image: string | null
           location: string | null
           name: string | null
           phone: string | null
           preferred_contact: string | null
           profile_type: string | null
+          reviews: number | null
           specialties: string[] | null
           updated_at: string | null
           user_id: string | null
           user_type: string | null
+          website: string | null
         }
         Insert: {
           bio?: string | null
@@ -36,19 +40,23 @@ export type Database = {
           business_name?: string | null
           created_at?: string | null
           description?: string | null
+          email?: string | null
           experience?: string | null
           full_name?: string | null
           hiring_status?: boolean | null
           id: string
+          image?: string | null
           location?: string | null
           name?: string | null
           phone?: string | null
           preferred_contact?: string | null
           profile_type?: string | null
+          reviews?: number | null
           specialties?: string[] | null
           updated_at?: string | null
           user_id?: string | null
           user_type?: string | null
+          website?: string | null
         }
         Update: {
           bio?: string | null
@@ -56,19 +64,23 @@ export type Database = {
           business_name?: string | null
           created_at?: string | null
           description?: string | null
+          email?: string | null
           experience?: string | null
           full_name?: string | null
           hiring_status?: boolean | null
           id?: string
+          image?: string | null
           location?: string | null
           name?: string | null
           phone?: string | null
           preferred_contact?: string | null
           profile_type?: string | null
+          reviews?: number | null
           specialties?: string[] | null
           updated_at?: string | null
           user_id?: string | null
           user_type?: string | null
+          website?: string | null
         }
         Relationships: []
       }
