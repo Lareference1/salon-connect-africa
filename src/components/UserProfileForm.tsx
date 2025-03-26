@@ -31,7 +31,6 @@ const profileSchema = z.object({
   email: z.string().email('Invalid email address'),
   phone: z.string().optional(),
   preferredContact: z.enum(['email', 'phone']),
-  userType: z.enum(['salon', 'braider', 'customer']).default('customer'),
 });
 
 const braiderSchema = z.object({
@@ -62,7 +61,6 @@ const UserProfileForm = () => {
       email: user?.email || '',
       phone: '',
       preferredContact: 'email',
-      userType: 'customer',
     },
   });
 
@@ -82,34 +80,36 @@ const UserProfileForm = () => {
       
       setIsLoading(true);
       try {
-        // In a real app, we would fetch the profile from the database
-        // For now, we'll just use the user's email
-        profileForm.setValue('email', user.email || '');
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
         
-        // Here you would typically fetch additional user profile data from your database
-        // const { data, error } = await supabase
-        //   .from('profiles')
-        //   .select('*')
-        //   .eq('id', user.id)
-        //   .single();
+        if (error && error.code !== 'PGRST116') {
+          throw error;
+        }
         
-        // if (data) {
-        //   profileForm.setValue('fullName', data.full_name);
-        //   profileForm.setValue('bio', data.bio);
-        //   profileForm.setValue('phone', data.phone);
-        //   profileForm.setValue('preferredContact', data.preferred_contact);
-        //   profileForm.setValue('userType', data.user_type);
-        //   
-        //   if (data.user_type === 'braider') {
-        //     setActiveTab('braider');
-        //     braiderForm.setValue('location', data.location);
-        //     braiderForm.setValue('experience', data.experience);
-        //     braiderForm.setValue('status', data.status);
-        //     setSpecialties(data.specialties || []);
-        //     braiderForm.setValue('specialties', data.specialties || []);
-        //     setProfileImage(data.image);
-        //   }
-        // }
+        if (data) {
+          profileForm.setValue('fullName', data.full_name || '');
+          profileForm.setValue('bio', data.bio || '');
+          profileForm.setValue('email', data.email || user.email || '');
+          profileForm.setValue('phone', data.phone || '');
+          profileForm.setValue('preferredContact', data.preferred_contact || 'email');
+          
+          if (data.image) {
+            setProfileImage(data.image);
+          }
+
+          if (data.specialties && data.specialties.length > 0) {
+            setActiveTab('braider');
+            braiderForm.setValue('location', data.location || '');
+            braiderForm.setValue('experience', data.experience || '');
+            braiderForm.setValue('status', data.profile_type === 'braider' ? 'available' : 'unavailable');
+            setSpecialties(data.specialties || []);
+            braiderForm.setValue('specialties', data.specialties || []);
+          }
+        }
       } catch (error) {
         console.error('Error fetching profile:', error);
         toast({
@@ -125,55 +125,33 @@ const UserProfileForm = () => {
     fetchUserProfile();
   }, [user, profileForm, braiderForm, toast]);
 
-  // Show braider tab only if user type is 'braider'
-  useEffect(() => {
-    const subscription = profileForm.watch((value) => {
-      if (value.userType === 'braider') {
-        setActiveTab('braider');
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [profileForm.watch]);
-
   const onProfileSubmit = async (data: ProfileFormValues) => {
     if (!user) return;
     
     setIsLoading(true);
     try {
-      // Here you would typically update the profile in your database
-      // const { error } = await supabase
-      //   .from('profiles')
-      //   .upsert({
-      //     id: user.id,
-      //     full_name: data.fullName,
-      //     bio: data.bio,
-      //     phone: data.phone,
-      //     preferred_contact: data.preferredContact,
-      //     user_type: data.userType,
-      //     image: profileImage, // Include profile image in update
-      //     updated_at: new Date(),
-      //   });
+      const { error } = await supabase
+        .from('profiles')
+        .upsert({
+          user_id: user.id,
+          id: user.id,
+          full_name: data.fullName,
+          bio: data.bio,
+          email: data.email,
+          phone: data.phone,
+          preferred_contact: data.preferredContact,
+          image: profileImage,
+          updated_at: new Date().toISOString(),
+        });
       
-      // if (error) throw error;
+      if (error) throw error;
       
       toast({
         title: 'Profile Updated',
         description: 'Your profile information has been saved.',
       });
       
-      // If user type is braider, switch to braider tab
-      if (data.userType === 'braider' && activeTab !== 'braider') {
-        setActiveTab('braider');
-      } else {
-        // Redirect based on user type
-        if (data.userType === 'salon') {
-          navigate('/salons');
-        } else if (data.userType === 'braider') {
-          navigate('/braiders');
-        } else {
-          navigate('/');
-        }
-      }
+      navigate('/settings');
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
@@ -191,20 +169,20 @@ const UserProfileForm = () => {
     
     setIsLoading(true);
     try {
-      // Here you would typically update the braider profile in your database
-      // const { error } = await supabase
-      //   .from('braider_profiles')
-      //   .upsert({
-      //     user_id: user.id,
-      //     location: data.location,
-      //     experience: data.experience,
-      //     status: data.status,
-      //     specialties: specialties,
-      //     image: profileImage,
-      //     updated_at: new Date(),
-      //   });
+      const { error } = await supabase
+        .from('profiles')
+        .upsert({
+          user_id: user.id,
+          id: user.id,
+          location: data.location,
+          experience: data.experience,
+          profile_type: 'braider',
+          specialties: specialties,
+          image: profileImage,
+          updated_at: new Date().toISOString(),
+        });
       
-      // if (error) throw error;
+      if (error) throw error;
       
       toast({
         title: 'Braider Profile Updated',
@@ -265,9 +243,7 @@ const UserProfileForm = () => {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="profile">Profile Information</TabsTrigger>
-          {profileForm.watch('userType') === 'braider' && (
-            <TabsTrigger value="braider">Braider Details</TabsTrigger>
-          )}
+          <TabsTrigger value="braider">Braider Details</TabsTrigger>
         </TabsList>
         
         <TabsContent value="profile">
@@ -275,7 +251,6 @@ const UserProfileForm = () => {
             <CardContent className="pt-6">
               <Form {...profileForm}>
                 <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-6">
-                  {/* Profile Photo Section */}
                   <div className="space-y-2">
                     <FormLabel>Profile Photo</FormLabel>
                     <div className="flex items-center space-x-4">
@@ -401,49 +376,6 @@ const UserProfileForm = () => {
                     )}
                   />
                   
-                  <FormField
-                    control={profileForm.control}
-                    name="userType"
-                    render={({ field }) => (
-                      <FormItem className="space-y-3">
-                        <FormLabel>I am a:</FormLabel>
-                        <FormControl>
-                          <RadioGroup
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                            className="flex flex-col space-y-1"
-                          >
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <RadioGroupItem value="salon" />
-                              </FormControl>
-                              <FormLabel className="font-normal">
-                                Salon Owner
-                              </FormLabel>
-                            </FormItem>
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <RadioGroupItem value="braider" />
-                              </FormControl>
-                              <FormLabel className="font-normal">
-                                Braider
-                              </FormLabel>
-                            </FormItem>
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <RadioGroupItem value="customer" />
-                              </FormControl>
-                              <FormLabel className="font-normal">
-                                Customer
-                              </FormLabel>
-                            </FormItem>
-                          </RadioGroup>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
                   <Button 
                     type="submit" 
                     disabled={isLoading}
@@ -464,136 +396,134 @@ const UserProfileForm = () => {
           </Card>
         </TabsContent>
         
-        {profileForm.watch('userType') === 'braider' && (
-          <TabsContent value="braider">
-            <Card>
-              <CardContent className="pt-6">
-                <Form {...braiderForm}>
-                  <form onSubmit={braiderForm.handleSubmit(onBraiderSubmit)} className="space-y-6">
-                    <div className="space-y-2">
-                      <FormLabel>Profile Photo</FormLabel>
-                      <div className="flex items-center space-x-4">
-                        <div className="h-24 w-24 rounded-full overflow-hidden bg-gray-100">
-                          <img 
-                            src={profileImage || '/placeholder.svg'} 
-                            alt="Profile" 
-                            className="h-full w-full object-cover"
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <Label htmlFor="imageUpload" className="cursor-pointer">
-                            <div className="flex items-center border border-input rounded-md p-2 hover:bg-accent">
-                              <Upload className="h-4 w-4 mr-2" />
-                              <span>Upload photo</span>
-                            </div>
-                            <input 
-                              type="file" 
-                              id="imageUpload" 
-                              accept="image/*" 
-                              className="hidden" 
-                              onChange={handleImageChange}
-                            />
-                          </Label>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <FormField
-                      control={braiderForm.control}
-                      name="location"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Location</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Paris, France" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={braiderForm.control}
-                      name="experience"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Experience</FormLabel>
-                          <FormControl>
-                            <Input placeholder="5 years" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={braiderForm.control}
-                      name="status"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Availability Status</FormLabel>
-                          <FormControl>
-                            <select 
-                              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                              value={field.value}
-                              onChange={field.onChange}
-                            >
-                              <option value="available">Available</option>
-                              <option value="soon">Available Soon</option>
-                              <option value="unavailable">Not Available</option>
-                            </select>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <div className="space-y-2">
-                      <FormLabel>Specialties</FormLabel>
-                      <div className="flex flex-wrap gap-2 mb-2">
-                        {specialties.map((specialty, index) => (
-                          <div key={index} className="flex items-center bg-salon-primary/10 text-salon-primary text-xs px-2 py-1 rounded">
-                            {specialty}
-                            <button 
-                              type="button" 
-                              className="ml-2 text-salon-primary hover:text-red-500"
-                              onClick={() => handleRemoveSpecialty(specialty)}
-                            >
-                              ×
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="flex space-x-2">
-                        <Input 
-                          placeholder="Add a specialty" 
-                          value={specialtyInput} 
-                          onChange={(e) => setSpecialtyInput(e.target.value)} 
+        <TabsContent value="braider">
+          <Card>
+            <CardContent className="pt-6">
+              <Form {...braiderForm}>
+                <form onSubmit={braiderForm.handleSubmit(onBraiderSubmit)} className="space-y-6">
+                  <div className="space-y-2">
+                    <FormLabel>Profile Photo</FormLabel>
+                    <div className="flex items-center space-x-4">
+                      <div className="h-24 w-24 rounded-full overflow-hidden bg-gray-100">
+                        <img 
+                          src={profileImage || '/placeholder.svg'} 
+                          alt="Profile" 
+                          className="h-full w-full object-cover"
                         />
-                        <Button type="button" size="sm" onClick={handleAddSpecialty}>Add</Button>
+                      </div>
+                      <div className="flex-1">
+                        <Label htmlFor="imageUpload" className="cursor-pointer">
+                          <div className="flex items-center border border-input rounded-md p-2 hover:bg-accent">
+                            <Upload className="h-4 w-4 mr-2" />
+                            <span>Upload photo</span>
+                          </div>
+                          <input 
+                            type="file" 
+                            id="imageUpload" 
+                            accept="image/*" 
+                            className="hidden" 
+                            onChange={handleImageChange}
+                          />
+                        </Label>
                       </div>
                     </div>
-                    
-                    <Button 
-                      type="submit" 
-                      disabled={isLoading}
-                      className="w-full bg-gradient-to-r from-salon-primary to-salon-primary/90 hover:from-salon-primary/80 hover:to-salon-primary hover:scale-105 shadow-md hover:shadow-lg active:scale-95 transition-all duration-300 border-0 rounded-full text-sm"
-                    >
-                      {isLoading ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Saving...
-                        </>
-                      ) : (
-                        'Save Braider Profile'
-                      )}
-                    </Button>
-                  </form>
-                </Form>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        )}
+                  </div>
+                  
+                  <FormField
+                    control={braiderForm.control}
+                    name="location"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Location</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Paris, France" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={braiderForm.control}
+                    name="experience"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Experience</FormLabel>
+                        <FormControl>
+                          <Input placeholder="5 years" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={braiderForm.control}
+                    name="status"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Availability Status</FormLabel>
+                        <FormControl>
+                          <select 
+                            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                            value={field.value}
+                            onChange={field.onChange}
+                          >
+                            <option value="available">Available</option>
+                            <option value="soon">Available Soon</option>
+                            <option value="unavailable">Not Available</option>
+                          </select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <div className="space-y-2">
+                    <FormLabel>Specialties</FormLabel>
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {specialties.map((specialty, index) => (
+                        <div key={index} className="flex items-center bg-salon-primary/10 text-salon-primary text-xs px-2 py-1 rounded">
+                          {specialty}
+                          <button 
+                            type="button" 
+                            className="ml-2 text-salon-primary hover:text-red-500"
+                            onClick={() => handleRemoveSpecialty(specialty)}
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex space-x-2">
+                      <Input 
+                        placeholder="Add a specialty" 
+                        value={specialtyInput} 
+                        onChange={(e) => setSpecialtyInput(e.target.value)} 
+                      />
+                      <Button type="button" size="sm" onClick={handleAddSpecialty}>Add</Button>
+                    </div>
+                  </div>
+                  
+                  <Button 
+                    type="submit" 
+                    disabled={isLoading}
+                    className="w-full bg-gradient-to-r from-salon-primary to-salon-primary/90 hover:from-salon-primary/80 hover:to-salon-primary hover:scale-105 shadow-md hover:shadow-lg active:scale-95 transition-all duration-300 border-0 rounded-full text-sm"
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Saving...
+                      </>
+                    ) : (
+                      'Save Braider Profile'
+                    )}
+                  </Button>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
     </div>
   );
