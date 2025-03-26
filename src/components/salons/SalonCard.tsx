@@ -6,22 +6,11 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/components/auth/AuthContext';
 import { Badge } from '@/components/ui/badge';
 import SalonEditForm from './SalonEditForm';
-
-export interface SalonData {
-  id: number;
-  name: string;
-  location: string;
-  rating: number;
-  reviews: number;
-  specialties: string[];
-  image: string;
-  hiringStatus: boolean;
-  description?: string;
-}
+import { SalonData } from '@/data/salonsData';
 
 interface SalonCardProps {
   salon: SalonData;
-  onUpdate?: (id: number, data: Partial<SalonData>) => void;
+  onUpdate?: (id: number | string, data: Partial<SalonData>) => void;
 }
 
 const SalonCard = ({ salon, onUpdate }: SalonCardProps) => {
@@ -32,7 +21,7 @@ const SalonCard = ({ salon, onUpdate }: SalonCardProps) => {
     setIsEditOpen(false);
   };
 
-  const handleUpdate = (id: number, data: Partial<SalonData>) => {
+  const handleUpdate = (id: number | string, data: Partial<SalonData>) => {
     if (onUpdate) {
       onUpdate(id, data);
     }

@@ -1,5 +1,18 @@
 
-import { SalonData } from '../components/salons/SalonCard';
+export interface SalonData {
+  id: number | string;
+  name: string;
+  location: string;
+  rating: number;
+  reviews: number;
+  specialties: string[];
+  image: string;
+  hiringStatus: boolean;
+  description?: string;
+  website?: string;
+  phone?: string;
+  email?: string;
+}
 
 export const salonsData: SalonData[] = [
   {
@@ -69,3 +82,21 @@ export const salonsData: SalonData[] = [
     description: "Luxurious salon experience with a focus on scalp health and beautiful styles."
   }
 ];
+
+// Helper function to transform profile data from Supabase to SalonData format
+export const transformProfileToSalon = (profile: any): SalonData => {
+  return {
+    id: profile.id || Math.random().toString(),
+    name: profile.name || profile.business_name || 'Unknown Salon',
+    location: profile.location || 'Location not specified',
+    image: profile.image || '/placeholder.svg',
+    specialties: profile.specialties || [],
+    rating: 4.5, // Default rating
+    reviews: 0, // Default reviews count
+    hiringStatus: profile.hiring_status || false,
+    description: profile.description || profile.business_description || '',
+    website: profile.website || '#',
+    phone: profile.phone || '',
+    email: profile.email || '',
+  };
+};

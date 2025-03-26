@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -10,7 +9,7 @@ import SearchForm from '@/components/salons/SearchForm';
 import SalonCard, { SalonData } from '@/components/salons/SalonCard';
 import NoResults from '@/components/salons/NoResults';
 import { supabase } from '@/integrations/supabase/client';
-import { salonsData } from '@/data/salonsData';
+import { salonsData, transformProfileToSalon } from '@/data/salonsData';
 
 const Salons = () => {
   const { t } = useLanguage();
@@ -46,19 +45,7 @@ const Salons = () => {
         
         if (data && data.length > 0) {
           // Transform Supabase data to match the SalonData interface
-          const supabaseSalons = data.map((salon, index) => ({
-            id: salon.id || index + 1000, // Use Supabase ID or fallback
-            name: salon.name || 'Unknown Salon',
-            location: salon.location || 'Location not specified',
-            rating: 4.5, // Default rating since it's not in the profiles table
-            image: salon.image || '/placeholder.svg',
-            specialties: salon.specialties || [],
-            hiringStatus: salon.hiring_status || false,
-            description: salon.description || '',
-            website: salon.website || '#',
-            phone: salon.phone || '',
-            email: salon.email || '',
-          }));
+          const supabaseSalons = data.map(salon => transformProfileToSalon(salon));
           
           // Combine with existing sample data to ensure UI has content
           const combinedSalons = [...supabaseSalons, ...salonsData];

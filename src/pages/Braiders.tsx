@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -8,7 +7,7 @@ import { useAuth } from '@/components/auth/AuthContext';
 import SearchForm from '@/components/braiders/SearchForm';
 import BraiderCard from '@/components/braiders/BraiderCard';
 import NoResults from '@/components/braiders/NoResults';
-import { braidersData, BraiderData } from '@/data/braidersData';
+import { braidersData, BraiderData, transformProfileToBraider } from '@/data/braidersData';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -46,20 +45,7 @@ const Braiders = () => {
         
         if (data && data.length > 0) {
           // Transform Supabase data to match the BraiderData interface
-          const supabaseBraiders = data.map((braider, index) => ({
-            id: braider.id || index + 1000, // Use Supabase ID or fallback
-            name: braider.name || 'Unknown Braider',
-            location: braider.location || 'Location not specified',
-            image: braider.image || '/placeholder.svg',
-            specialties: braider.specialties || [],
-            rating: 4.5, // Default rating since it's not in the profiles table
-            experience: braider.experience || '1+ years',
-            bio: braider.description || '',
-            status: 'available', // Default status
-            availability: 'Disponible', // Default availability text
-            phone: braider.phone || '',
-            email: braider.email || '',
-          }));
+          const supabaseBraiders = data.map(braider => transformProfileToBraider(braider));
           
           // Combine with existing sample data to ensure UI has content
           const combinedBraiders = [...supabaseBraiders, ...braidersData];

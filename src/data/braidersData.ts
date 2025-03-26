@@ -1,5 +1,6 @@
+
 export interface BraiderData {
-  id: number;
+  id: number | string;
   name: string;
   location: string;
   rating: number;
@@ -10,6 +11,8 @@ export interface BraiderData {
   experience: string;
   status: 'available' | 'soon' | 'unavailable';
   bio?: string;
+  phone?: string;
+  email?: string;
 }
 
 export const braidersData: BraiderData[] = [
@@ -87,3 +90,22 @@ export const braidersData: BraiderData[] = [
     status: "soon"
   },
 ];
+
+// Helper function to transform profile data from Supabase to BraiderData format
+export const transformProfileToBraider = (profile: any): BraiderData => {
+  return {
+    id: profile.id || Math.random().toString(),
+    name: profile.name || profile.full_name || 'Unknown Braider',
+    location: profile.location || 'Location not specified',
+    image: profile.image || '/placeholder.svg',
+    specialties: profile.specialties || [],
+    rating: 4.5, // Default rating
+    reviews: 0, // Default reviews count
+    experience: profile.experience || '1+ years',
+    bio: profile.description || profile.bio || '',
+    status: 'available', // Default status
+    availability: 'Disponible', // Default availability text
+    phone: profile.phone || '',
+    email: profile.email || '',
+  };
+};
