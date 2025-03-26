@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
-import { Upload } from 'lucide-react';
-import { Label } from '@/components/ui/label';
+import { Upload, Camera } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface ProfileImageUploadProps {
   profileImage: string | null;
@@ -26,32 +26,26 @@ const ProfileImageUpload = ({
   };
 
   return (
-    <div className="space-y-2">
-      <Label>Profile Photo</Label>
-      <div className="flex items-center space-x-4">
-        <div className="h-24 w-24 rounded-full overflow-hidden bg-gray-100">
-          <img 
-            src={profileImage || '/placeholder.svg'} 
-            alt="Profile" 
-            className="h-full w-full object-cover"
-          />
-        </div>
-        <div className="flex-1">
-          <Label htmlFor={inputId} className="cursor-pointer">
-            <div className="flex items-center border border-input rounded-md p-2 hover:bg-accent">
-              <Upload className="h-4 w-4 mr-2" />
-              <span>Upload photo</span>
-            </div>
-            <input 
-              type="file" 
-              id={inputId} 
-              accept="image/*" 
-              className="hidden" 
-              onChange={handleImageChange}
-            />
-          </Label>
-        </div>
-      </div>
+    <div className="flex flex-col space-y-2">
+      <Button 
+        variant="outline" 
+        size="sm" 
+        className="flex items-center gap-2"
+        onClick={() => document.getElementById(inputId)?.click()}
+      >
+        <Camera className="h-4 w-4" />
+        <span>Upload Profile Photo</span>
+      </Button>
+      <p className="text-xs text-muted-foreground">
+        Upload a professional profile photo. JPG or PNG, up to 2MB.
+      </p>
+      <input 
+        type="file" 
+        id={inputId} 
+        accept="image/*" 
+        className="hidden" 
+        onChange={handleImageChange}
+      />
     </div>
   );
 };
