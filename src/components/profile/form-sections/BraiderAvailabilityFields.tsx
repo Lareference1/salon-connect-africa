@@ -143,12 +143,12 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
                       <Calendar
                         mode="multiple"
                         selected={selectedDates}
-                        onSelect={(selectedDates) => {
-                          // The react-day-picker passes dates array when in multiple mode
-                          if (Array.isArray(selectedDates)) {
-                            setSelectedDates(selectedDates);
-                          } else if (selectedDates instanceof Date) {
-                            handleDateSelect(selectedDates);
+                        onSelect={(dates) => {
+                          // For multiple mode, react-day-picker will pass an array of dates
+                          if (dates) {
+                            setSelectedDates(Array.isArray(dates) ? dates : [dates]);
+                          } else {
+                            setSelectedDates([]);
                           }
                         }}
                         disabled={(date) => date < new Date()}
