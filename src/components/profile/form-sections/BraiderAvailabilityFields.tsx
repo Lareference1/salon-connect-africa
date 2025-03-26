@@ -117,7 +117,6 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
                       side="bottom"
                       sideOffset={5}
                       avoidCollisions={false}
-                      initialFocus={false}
                     >
                       <Calendar
                         mode="multiple"
@@ -133,19 +132,28 @@ const BraiderAvailabilityFields = ({ control }: BraiderAvailabilityFieldsProps) 
                 
                 {selectedDates.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-3">
-                    {selectedDates.sort((a, b) => a.getTime() - b.getTime()).map((date, index) => (
-                      <Badge 
-                        key={index} 
-                        variant="secondary"
-                        className="flex items-center gap-1 py-1 px-2"
-                      >
-                        {format(date, "PPP")}
-                        <X 
-                          className="h-3 w-3 cursor-pointer hover:text-destructive" 
-                          onClick={() => removeDate(date)}
-                        />
-                      </Badge>
-                    ))}
+                    {selectedDates
+                      .sort((a, b) => a.getTime() - b.getTime())
+                      .map((date, index) => {
+                        // Ensure date is a valid Date object before formatting
+                        if (!(date instanceof Date) || isNaN(date.getTime())) {
+                          return null;
+                        }
+                        
+                        return (
+                          <Badge 
+                            key={index} 
+                            variant="secondary"
+                            className="flex items-center gap-1 py-1 px-2"
+                          >
+                            {format(date, "PPP")}
+                            <X 
+                              className="h-3 w-3 cursor-pointer hover:text-destructive" 
+                              onClick={() => removeDate(date)}
+                            />
+                          </Badge>
+                        );
+                      })}
                   </div>
                 )}
                 
