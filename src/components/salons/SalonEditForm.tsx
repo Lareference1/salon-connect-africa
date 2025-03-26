@@ -34,7 +34,7 @@ interface SalonEditFormProps {
   salon: SalonData;
   open: boolean;
   onClose: () => void;
-  onUpdate: (id: number, data: Partial<SalonData>) => void;
+  onUpdate: (id: number | string, data: Partial<SalonData>) => void;
 }
 
 const SalonEditForm = ({ salon, open, onClose, onUpdate }: SalonEditFormProps) => {
