@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/auth/AuthContext";
-import { PlusCircle, X, Loader2, Camera, User } from "lucide-react";
+import { PlusCircle, X, Loader2, Camera, User, Calendar } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import {
@@ -27,6 +27,14 @@ import {
   AvatarFallback,
 } from "@/components/ui/avatar";
 import { useLanguage } from "@/contexts/LanguageContext";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 // Define the schema for form validation
 const formSchema = z.object({
@@ -35,6 +43,9 @@ const formSchema = z.object({
   description: z.string().optional(),
   hiringStatus: z.boolean().optional(),
   specialties: z.array(z.string()).min(1, "At least one specialty is required"),
+  profileType: z.enum(["salon", "braider"]).default("salon"),
+  availability: z.enum(["available", "unavailable"]).default("available"),
+  availableDate: z.date().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -57,8 +68,13 @@ const ProfileCreationForm = () => {
       description: "",
       hiringStatus: false,
       specialties: [],
+      profileType: "salon",
+      availability: "available",
     },
   });
+
+  const profileType = form.watch("profileType");
+  const availability = form.watch("availability");
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -109,9 +125,15 @@ const ProfileCreationForm = () => {
         location: data.location,
         description: data.description || '',
         specialties: data.specialties,
-        hiring_status: data.hiringStatus,
+        hiring_status: data.profileType === "salon" ? data.hiringStatus : false,
         user_id: user.id,
         image: profileImage,
+        profile_type: data.profileType,
+        experience: data.profileType === "braider" ? 
+          (data.availability === "unavailable" && data.availableDate 
+            ? `Available from ${format(data.availableDate, "PPP")}` 
+            : (data.availability === "available" ? "Available now" : "Not available")) 
+          : null,
       });
       
       if (error) throw error;
@@ -183,6 +205,34 @@ const ProfileCreationForm = () => {
               />
             </div>
           </div>
+
+          <FormField
+            control={form.control}
+            name="profileType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Profile Type</FormLabel>
+                <FormControl>
+                  <div className="flex gap-4">
+                    <div 
+                      className={`flex-1 border rounded-md p-4 cursor-pointer transition-colors ${field.value === "salon" ? "border-primary bg-primary/10" : "border-muted"}`}
+                      onClick={() => form.setValue("profileType", "salon")}
+                    >
+                      <div className="font-medium mb-1">Salon</div>
+                      <div className="text-sm text-muted-foreground">Create a salon or business profile</div>
+                    </div>
+                    <div 
+                      className={`flex-1 border rounded-md p-4 cursor-pointer transition-colors ${field.value === "braider" ? "border-primary bg-primary/10" : "border-muted"}`}
+                      onClick={() => form.setValue("profileType", "braider")}
+                    >
+                      <div className="font-medium mb-1">Braider</div>
+                      <div className="text-sm text-muted-foreground">Create a braider profile</div>
+                    </div>
+                  </div>
+                </FormControl>
+              </FormItem>
+            )}
+          />
 
           <FormField
             control={form.control}
@@ -286,26 +336,106 @@ const ProfileCreationForm = () => {
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="hiringStatus"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <div className="space-y-1 leading-none">
-                  <FormLabel>Currently Hiring</FormLabel>
-                  <FormDescription>
-                    Check this if you are currently looking for braiders.
-                  </FormDescription>
-                </div>
-              </FormItem>
-            )}
-          />
+          {profileType === "salon" && (
+            <FormField
+              control={form.control}
+              name="hiringStatus"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>Currently Hiring</FormLabel>
+                    <FormDescription>
+                      Check this if your salon is currently looking for braiders.
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
+          )}
+          
+          {profileType === "braider" && (
+            <>
+              <FormField
+                control={form.control}
+                name="availability"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Availability</FormLabel>
+                    <FormControl>
+                      <div className="flex gap-4">
+                        <div 
+                          className={`flex-1 border rounded-md p-4 cursor-pointer transition-colors ${field.value === "available" ? "border-green-500 bg-green-50 dark:bg-green-900/20" : "border-muted"}`}
+                          onClick={() => form.setValue("availability", "available")}
+                        >
+                          <div className="font-medium mb-1 text-green-600 dark:text-green-400">Available</div>
+                          <div className="text-sm text-muted-foreground">I'm currently available for bookings</div>
+                        </div>
+                        <div 
+                          className={`flex-1 border rounded-md p-4 cursor-pointer transition-colors ${field.value === "unavailable" ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-muted"}`}
+                          onClick={() => form.setValue("availability", "unavailable")}
+                        >
+                          <div className="font-medium mb-1 text-red-600 dark:text-red-400">Not Available</div>
+                          <div className="text-sm text-muted-foreground">I'm not currently taking bookings</div>
+                        </div>
+                      </div>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              
+              {availability === "unavailable" && (
+                <FormField
+                  control={form.control}
+                  name="availableDate"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Available from</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-full pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Select a date</span>
+                              )}
+                              <Calendar className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <CalendarComponent
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) => date < new Date()}
+                            initialFocus
+                            className={cn("p-3 pointer-events-auto")}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormDescription>
+                        When will you be available again for bookings?
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+            </>
+          )}
         </div>
 
         <Button 
